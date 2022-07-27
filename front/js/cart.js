@@ -163,3 +163,71 @@ function supprimerQuantite(settings, produit) {
   supprimer.appendChild(boutonSupprimer)
   settings.appendChild(supprimer)
 }
+
+//*--------------------------------------------------------------
+//* Supprimer l'article de la page ------------------------------
+//*--------------------------------------------------------------
+function supprimerArticle (produit) {
+  const objetSupprimer = panier.findIndex(
+    (product) => product.id === produit.id && product.couleur === produit.couleur)
+  panier.splice(objetSupprimer, 1)
+  localStorage.setItem("Produit(s)", JSON.stringify(panier))
+  
+  if (panier == 0) {
+    localStorage.clear()
+  }
+  location.reload()
+}
+
+//*--------------------------------------------------------------
+//* Mise à jour de la quantitée ---------------------------------
+//*--------------------------------------------------------------
+function majQuantite(produit, id, couleur, nouvelleValeur) {
+  const nouvelleQuantite = panier.find((produit) => produit.id === id && produit.couleur === couleur) 
+  nouvelleQuantite.quantite = Number(nouvelleValeur)
+
+  afficherTotalQuantite()
+  afficherTotalPrix()
+  majLocalStorage(produit)
+}
+
+//*--------------------------------------------------------------
+//* Mise à jour dans le local storage ---------------------------
+//*--------------------------------------------------------------
+function majLocalStorage() {
+  const dataToSave = JSON.stringify(panier)
+  localStorage.setItem("Produit(s)", dataToSave)
+}
+
+//*--------------------------------------------------------------
+//* Création total produit --------------------------------------
+//*--------------------------------------------------------------
+function afficherTotalQuantite() {
+  const afficherTotalQuantite= document.querySelector("#totalQuantity")
+  
+  let total = 0
+  
+  panier.forEach((produit) => {
+    const totalUnitQuantite = produit.quantite
+    produit.quantite = Math.min(produit.quantite, 100)
+    total += totalUnitQuantite 
+  })
+  afficherTotalQuantite.textContent = total
+}
+
+//*--------------------------------------------------------------
+//* Création prix total produit ---------------------------------
+//*--------------------------------------------------------------
+function afficherTotalPrix() {
+  const afficherTotalPrix = document.querySelector("#totalPrice")
+  
+  // let total = 0 
+  // panier.forEach((produit) => {
+  //   const totalPrixUnite = produit.prix * produit.quantite
+  //   total += totalPrixUnite 
+  // })
+  //=============================================================
+  const total = panier.reduce((total, produit) => total + produit.prix * produit.quantite, 0)
+
+  afficherTotalPrix.textContent = total
+}
