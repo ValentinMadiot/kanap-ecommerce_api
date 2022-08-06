@@ -28,7 +28,7 @@ function afficherProduits(produits) {
   for (const produit of produits) {
     // Création de : a > article > img + h3 + p avec les valeurs dynamique de l'API
     tousLesProduits.innerHTML += 
-    `<a href="./product.html?_id=${produit._id}">
+    `<a href="./product.html?id=${produit._id}">
       <article>
         <img src="${produit.imageUrl}" alt="${produit.altTxt}">
         <h3 class="productName">${produit.name}</h3>
