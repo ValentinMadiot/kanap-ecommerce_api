@@ -1,21 +1,24 @@
 //*-------------------------------------------------------------------------
 //*--------- Récupération des données de l'API via l'ID du produit ---------
 //*-------------------------------------------------------------------------
-// Récupération de "id" du produit sélectionné dans l'URL
-const id = new URLSearchParams(window.location.search).get("id")
-// console.log("ID du produit sélectionné :", id)
+// On récupère l'URL de la page avec URLSearchParams
+const params = new URLSearchParams(window.location.search)
+// On y ajoute ID du produit pour récupérer les informations de l'API
+const id = params.get("id")
+console.log("ID du produit sélectionné :", id)
 
 //*-------------------------------------------------------------------------
 //*--- Récupération des données de l'API via l'ID du produit sélectionné ---
 //*-------------------------------------------------------------------------
+// On récupère les données de l'API via l'ID du produit sélectionné
 fetch(`http://localhost:3000/api/products/${id}`)
-  // Ecrit la réponse de l'API au format JSON
+  // On obtient la réponse de l'API qu'on converti au format JSON
   .then((res) => res.json())
   // Les données JSON sont appelées "produit"
   .then((produit) => {
-    // Afficher les données du produit en console 
-    console.table("Données du produit sélectionné :", produit)
-    // Exécution de la fonction qui affiche les produits
+    // On affiche les données du produit en console 
+    console.log("Données du produit sélectionné :", produit)
+    // On execute la fonction qui affiche le produit
     afficherProduit(produit)
   })
   // Si une erreur se produit => remplace le contenu de la section "item"  
@@ -28,7 +31,7 @@ fetch(`http://localhost:3000/api/products/${id}`)
 //*-------------------------------------------------------------------------
 //*-------------------- Afficher les données du produit --------------------
 //*-------------------------------------------------------------------------
-// Appel les fonctions créées avec en paramètre les données API à afficher
+// On appel les fonctions créées avec en paramètre les données API à afficher
 function afficherProduit(produit) {
   creationNomOnglet(produit.name)
   creationImage(produit.imageUrl, produit.altTxt)
@@ -52,11 +55,9 @@ function creationNomOnglet(nom) {
 //*-------------------------------------------------------------------------
 function creationImage(imageUrl, altTxt) {
   const divImg = document.querySelector(".item__img")
-  
   const img = document.createElement("img")
   img.src = imageUrl
   img.alt = altTxt
-
   divImg.appendChild(img)
 }
 
@@ -93,7 +94,6 @@ function creationCouleurs(couleurs) {
     const option = document.createElement("option")
     option.value = couleur
     option.textContent = couleur
-
     selectionner.appendChild(option)
   });
 }
@@ -102,25 +102,22 @@ function creationCouleurs(couleurs) {
 //*------------- Créer un ou plusieurs produit dans le panier --------------
 //*-------------------------------------------------------------------------
 function creationPanier(produit) {
-  // Ecoute la réponse du boutton au clique de l'utilisateur
+  // On écoute la réponse du boutton au clique de l'utilisateur
   const button = document.querySelector("#addToCart")
   button.addEventListener("click", () => { 
-    // Récupère les valeurs des Input de #colors et #quantity
+    // On récupère les valeurs des Input de #colors et #quantity
     const couleur = document.querySelector("#colors").value
     const quantite = document.querySelector("#quantity").value
-    
     // Si l'achat est invalide on retourne l'information
     if (AchatInvalide(couleur, quantite)) return
-    
-    // On ajoute les informations séléctionnées par l'utilisateur
+    // Autrement on ajoute les informations séléctionnées par l'utilisateur
     ajoutPanier(produit, quantite, couleur)
-    
-    // Message qu'on affiche pour rediriger l'utilisateur après avoir validé sa sélection
+    // On affiche un message pour rediriger l'utilisateur après avoir validé sa sélection
     const message = `Le ${produit.name} avec la couleur ${couleur} a bien été ajouté au panier !
     Consuler le Panier [OK] | Rester sur la page ${produit.name} [Annuler]`
     confirmationAchat(message)
   })
-  // Retourne les informations saisie dans le local storage 
+  // On retourne les informations saisie dans le local storage 
   return (panier = JSON.parse(localStorage.getItem("Produit")))
 }
 
@@ -128,16 +125,14 @@ function creationPanier(produit) {
 //*-------------- Condition pour ajouter un article au panier --------------
 //*-------------------------------------------------------------------------
 function ajoutPanier(produit, quantite, couleur) {
-  // Informations sous forme d'objet des données sauvegardées dans le local storage
+  // Les informations sont stockés sous forme d'objet dans le local storage
   const achat = {
     id: produit._id,
     color: couleur,
     quantity: Number(quantite),
   }
-
-  // Variable panier avec comme clé "Produit" dans le local storage
+  // On créer une variable panier avec comme clé "Produit" dans le local storage
   let panier = JSON.parse(localStorage.getItem("Produit"))
-
   // Si le panier est vide => création d'un tableau + push du 1er produit
   if (panier == null) {
     panier = []
@@ -145,10 +140,9 @@ function ajoutPanier(produit, quantite, couleur) {
     localStorage.setItem("Produit", JSON.stringify(panier))
     // Confirme l'ajout au panier
     confirmationAchat()
-  
   // Sinon le panier n'est pas vide => ... 
   } else {
-    // Boucle sur les éléments panier
+    // On fait une boucle sur les éléments panier
     for (i = 0; i < panier.length; i++) {                
       // Si le produit est similaire (id/couleur) => Ajout de quantité 
       if (panier[i].id == produit._id && panier[i].color == couleur) {
@@ -161,7 +155,7 @@ function ajoutPanier(produit, quantite, couleur) {
         )
       }
     }
-    // Boucle sur les éléments panier
+    // On fait une boucle sur les éléments panier
     for (i = 0; i < panier.length; i++) { 
       // Si le produit à (un ID similaire ET une couleur différente) OU un ID différent
       if (panier[i].id == produit._id && panier[i].color != couleur || panier[i].id != produit._id) {
@@ -196,7 +190,7 @@ const confirmationAchat = (message = undefined) => {
 function AchatInvalide(couleur, quantite) {
   // Si aucune couleur ET/OU quantité est séléctionné => alerte
   if (couleur == 0 || quantite == 0) {
-    alert (" Veuillez choisir une couleur et une quantité")
+    alert ("Veuillez choisir une couleur et une quantité")
     return true
   }
   // Si une quantitée < 0 est écrite OU Si une quantitée > 100 est écrite => alerte

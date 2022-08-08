@@ -7,13 +7,11 @@ ecouteFormulaire()
 //*-------------------- Récupération données de l'API ----------------------
 //*-------------------------------------------------------------------------
 fetch("http://localhost:3000/api/products/")
-// Ecrit la réponse de l'API au format JSON
+// On obtient la réponse de l'API qu'on converti au format JSON
 .then((res) => res.json())
 // Les données JSON sont appelées "produits"
 .then((produits) => {
-  // Informations sur les produits en console sous forme de tableau
-  // console.table(produits)
-  // Exécution de la fonction qui fait le liens entre le local storage et l'API
+  // On exécute la fonction qui fait le liens entre le local storage et l'API
   recupererDonneesAchat(produits)
 })
 .catch((err) => {
@@ -27,20 +25,18 @@ fetch("http://localhost:3000/api/products/")
 //*------- Récupérer les donner du produit qu'on a ajouté au panier --------
 //*-------------------------------------------------------------------------
 function recupererDonneesAchat(produits) {
-  // Informations (id, nom, couleur) des produits ajouté dans notre panier
+  // On récupère les informations (id, nom, couleur) du/des produit(s) ajouté(s) dans notre panier
   const panier = JSON.parse(localStorage.getItem("Produit"))
-
   // Si le panier est vide => Renvoi le message "Votre panier est vide"
   if (panier === null || panier.length == 0 ) {
     document.querySelector("#cartAndFormContainer").innerHTML = "<h1>Votre panier est vide</h1>"
-  
   // Sinon si le panier n'est pas vide =>
   } else if (panier != null) {
     // On fait une boucle sur tous les achats de notre panier =>
     for (let achat of panier) {
       // On fait une boucle sur toutes les données d'un produit de l'API =>
       for (let a = 0, b = produits.length; a < b; a++) {
-        // Si id de notre achat du panier est identique à l'id du produit de l'API 
+        // Si id de l'achat de notre panier est identique à l'id du produit de l'API 
         if (achat.id === produits[a]._id) {
           // On récupère les données de chaque éléments dont on a besoin
           achat.name = produits[a].name
@@ -50,11 +46,11 @@ function recupererDonneesAchat(produits) {
         }
       }
     }
-    // Affiche les achats du panier en console
+    // On affiche les achats du panier en console
     console.log("Panier : ", panier)
-    // Pour afficher les produits du panier
+    // On appel notre fonction pour afficher les produits du panier
     afficherProduit(panier)
-    // Pour modifier et supprimer la quantitée des articles    
+    // On appel nos fonctions pour modifier et supprimer la quantitée des articles    
     modifierQuantite()
     supprimerProduit()
   }  
@@ -66,7 +62,7 @@ function recupererDonneesAchat(produits) {
 function afficherProduit(panier) {
   // On déclare et on cible sur quel section du HTML on veut afficher les produits du panier
   const produitPanier = document.querySelector("#cart__items");
-  // Création du HTML dynamique : Méthode .map() + introduction de data-set
+  // On créer un HTML dynamique avec la méthode .map() + introduction de data-set
   produitPanier.innerHTML += panier.map((achat) =>
     `<article class="cart__item" data-id="${achat.id}" data-color="${achat.color}" data-quantity="${achat.quantity}" data-price="${achat.price}"> 
       <div class="cart__item__img">
@@ -90,8 +86,7 @@ function afficherProduit(panier) {
       </div>
     </article>`
   ).join("")
-
-  // Pour afficher les totaux (Quantité + Prix article)    
+  // On appel la fonction pour afficher les totaux (Quantité + Prix article)    
   totauxPanier()
 }
 
@@ -101,28 +96,36 @@ function afficherProduit(panier) {
 function modifierQuantite() {
   // On déclare et on cible tous les éléments avec la classe ".cart__item"
   const produitPanier = document.querySelectorAll(".cart__item");
-
   // De façon dynamique graçe au dataset => 
   // On écoute les évènements (eQuantite) sur chaque input d'article concerné
   produitPanier.forEach((achat) => {
     achat.addEventListener("change", (eQuantite) => {
       // On appel les ressources de notre "panier" (local storage)
       const panier = JSON.parse(localStorage.getItem("Produit"))
-
       // On fait une boucle sur les produits du Panier
-      for (produit of panier){
+      for (produit of panier) {
         if (
           // Si ( id + color ) sont similaires
           produit.id === achat.dataset.id &&
           achat.dataset.color === produit.color
         ) {
-          // Modification de la quantité
-          produit.quantity = Math.min(eQuantite.target.value, 100)
-          // Envoi les nouvelles données au local storage
+          // Si la valeure est supérieur à 100 => 
+          // On envoi un message et on remplace la valeur par 100
+          if (eQuantite.target.value > 100) {
+            alert("Vous avez dépassé la quantité limite")
+            eQuantite.target.value = 100
+          }
+          // Si la valeur est négative =>
+          // On envoi un message et on remplace la valeur par 1
+          else if (eQuantite.target.value < 0) {
+            alert("La quantité minimum est : 1")
+            eQuantite.target.value = 1
+          }
+          // On envoi les nouvelles données au local storage
           localStorage.Produit = JSON.stringify(panier)
-          // Mise à jour du dataset quantity
+          // On fait une mise à jour du dataset quantity
           achat.dataset.quantity = eQuantite.target.value
-          // Appel de la fonction de Total dynamique
+          // On appel la fonction des "totauxPanier" dynamiquement
           totauxPanier();
         }
       }
@@ -155,15 +158,13 @@ function supprimerProduit() {
           panier.splice(num, 1)
           // On renvoi un nouveau panier converti dans le Local Storage 
           localStorage.Produit = JSON.stringify(panier)
-          
-          // Suppression de l'Affichage HTML
+          // On supprime l'Affichage HTML
           const displayToDelete = document.querySelector(
             `article[data-id="${produit.dataset.id}"][data-color="${produit.dataset.color}"]`)
           displayToDelete.remove()
-
-          // Si Panier vide
+          // Si le Panier est vide
           if (panier === null || panier.length == 0 ) {
-            // On vide le local storage ([] vide)                       
+            // On vide le local storage                      
             window.localStorage.clear()
             // On affiche l'information "Votre panier est vide"
             document.querySelector("#cartAndFormContainer").innerHTML = "<h1>Votre panier est vide</h1>"
@@ -178,10 +179,10 @@ function supprimerProduit() {
 //*--------- Calcul et Affichage du Total Panier : Quantité + Prix ---------
 //*-------------------------------------------------------------------------
 function totauxPanier() {
-  // Déclaration des variables de "Total" en tant que nombre
+  // On déclare des variables de "Total" en tant que nombre
   let totalProduits = 0
   let totalPrix = 0
-  // On déclare et cible toutes les classes ".cart__item"
+  // On déclare et on cible toutes les classes ".cart__item"
   const achats = document.querySelectorAll(".cart__item")
   // Pour chaque élément (achat) des achats
   achats.forEach((achat) => {
@@ -237,7 +238,7 @@ function ecouteFormulaire() {
 function envoiFormulaire(e) {
   // On récupère les données du client
   const client = donneeClient(e)
-  // Si les informations sont manquantes, on envoi pas
+  // Si les informations sont manquantes, on retourne sans envoyer
   if (client == null) return
   // On envoye l'objet "client" qui contient toutes les données à l'API pour obtenir ID de commande
   fetch("http://localhost:3000/api/products/order", {
@@ -271,7 +272,6 @@ function donneeClient(e) {
     const adresse = document.getElementById("address").value
     const ville = document.getElementById("city").value
     const email = document.getElementById("email").value
-
     // On récupère les ID des produits du client
     const produitsIds = []
     panier.forEach((produit) => {
@@ -289,7 +289,7 @@ function donneeClient(e) {
       products: produitsIds
     }
     return informationsClient
-    
+  // Sinon on retourne une alerte
   } else {
     alert("Le formulaire n'est pas correctement rempli, veuillez réessayer.")
     e.preventDefault()
