@@ -1,45 +1,36 @@
-const http = require('http');
-const app = require('./app');
+const express = require("express");
+const path = require("path");
 
-const normalizePort = val => {
-  const port = parseInt(val, 10);
+const productRoutes = require("./routes/product");
 
-  if (isNaN(port)) {
-    return val;
-  }
-  if (port >= 0) {
-    return port;
-  }
-  return false;
-};
-const port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+const app = express();
 
-const errorHandler = error => {
-  if (error.syscall !== 'listen') {
-    throw error;
-  }
-  const address = server.address();
-  const bind = typeof address === 'string' ? 'pipe ' + address : 'port: ' + port;
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges.');
-      process.exit(1);
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use.');
-      process.exit(1);
-    default:
-      throw error;
-  }
-};
-
-const server = http.createServer(app);
-
-server.on('error', errorHandler);
-server.on('listening', () => {
-  const address = server.address();
-  const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
-  console.log('Listening on ' + bind);
+// Configuration du CORS
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  next();
 });
 
-server.listen(port);
+// Middleware pour parser les requêtes
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// Routes API
+app.use("/api/products", productRoutes);
+
+// Définition du port
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Serveur en ligne sur le port ${PORT}`);
+});
+
+module.exports = app;

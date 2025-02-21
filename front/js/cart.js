@@ -1,59 +1,61 @@
 //*-------------------------------------------------------------------------
 //*------ Appel la fonction qui écoute tous les inputs du formulaire -------
 //*-------------------------------------------------------------------------
-ecouteFormulaire()
+ecouteFormulaire();
 
 //*-------------------------------------------------------------------------
 //*-------------------- Récupération données de l'API ----------------------
 //*-------------------------------------------------------------------------
 fetch("http://localhost:3000/api/products/")
-// On obtient la réponse de l'API qu'on converti au format JSON
-.then((res) => res.json())
-// Les données JSON sont appelées "produits"
-.then((produits) => {
-  // On exécute la fonction qui fait le liens entre le local storage et l'API
-  recupererDonneesAchat(produits)
-})
-.catch((err) => {
-  // Si une erreur se produit => remplace le contenu du titre h1  
-  // avec "erreur 404" et renvoi une erreur en console
-  document.querySelector("#cartAndFormContainer").innerHTML = "<h1>erreur 404<h1>"
-  console.log("API => erreur 404 : " + err)
-})
+  // On obtient la réponse de l'API qu'on converti au format JSON
+  .then((res) => res.json())
+  // Les données JSON sont appelées "produits"
+  .then((produits) => {
+    // On exécute la fonction qui fait le liens entre le local storage et l'API
+    recupererDonneesAchat(produits);
+  })
+  .catch((err) => {
+    // Si une erreur se produit => remplace le contenu du titre h1
+    // avec "erreur 404" et renvoi une erreur en console
+    document.querySelector("#cartAndFormContainer").innerHTML =
+      "<h1>erreur 404<h1>";
+    console.log("API => erreur 404 : " + err);
+  });
 
 //*-------------------------------------------------------------------------
 //*------- Récupérer les donner du produit qu'on a ajouté au panier --------
 //*-------------------------------------------------------------------------
 function recupererDonneesAchat(produits) {
   // On récupère les informations (id, nom, couleur) du/des produit(s) ajouté(s) dans notre panier
-  const panier = JSON.parse(localStorage.getItem("Produit"))
+  const panier = JSON.parse(localStorage.getItem("Produit"));
   // Si le panier est vide => Renvoi le message "Votre panier est vide"
-  if (panier === null || panier.length == 0 ) {
-    document.querySelector("#cartAndFormContainer").innerHTML = "<h1>Votre panier est vide</h1>"
-  // Sinon si le panier n'est pas vide =>
+  if (panier === null || panier.length == 0) {
+    document.querySelector("#cartAndFormContainer").innerHTML =
+      "<h1>Votre panier est vide</h1>";
+    // Sinon si le panier n'est pas vide =>
   } else if (panier != null) {
     // On fait une boucle sur tous les achats de notre panier =>
     for (let achat of panier) {
       // On fait une boucle sur toutes les données d'un produit de l'API =>
       for (let a = 0, b = produits.length; a < b; a++) {
-        // Si id de l'achat de notre panier est identique à l'id du produit de l'API 
+        // Si id de l'achat de notre panier est identique à l'id du produit de l'API
         if (achat.id === produits[a]._id) {
           // On récupère les données de chaque éléments dont on a besoin
-          achat.name = produits[a].name
-          achat.price = produits[a].price
-          achat.imageUrl = produits[a].imageUrl
-          achat.altTxt = produits[a].altTxt
+          achat.name = produits[a].name;
+          achat.price = produits[a].price;
+          achat.imageUrl = produits[a].imageUrl;
+          achat.altTxt = produits[a].altTxt;
         }
       }
     }
     // On affiche les achats du panier en console
-    console.log("Panier : ", panier)
+    console.log("Panier : ", panier);
     // On appel notre fonction pour afficher les produits du panier
-    afficherProduit(panier)
-    // On appel nos fonctions pour modifier et supprimer la quantitée des articles    
-    modifierQuantite()
-    supprimerProduit()
-  }  
+    afficherProduit(panier);
+    // On appel nos fonctions pour modifier et supprimer la quantitée des articles
+    modifierQuantite();
+    supprimerProduit();
+  }
 }
 
 //*-------------------------------------------------------------------------
@@ -63,8 +65,10 @@ function afficherProduit(panier) {
   // On déclare et on cible sur quel section du HTML on veut afficher les produits du panier
   const produitPanier = document.querySelector("#cart__items");
   // On créer un HTML dynamique avec la méthode .map() + introduction de data-set
-  produitPanier.innerHTML += panier.map((achat) =>
-    `<article class="cart__item" data-id="${achat.id}" data-color="${achat.color}" data-quantity="${achat.quantity}" data-price="${achat.price}"> 
+  produitPanier.innerHTML += panier
+    .map(
+      (achat) =>
+        `<article class="cart__item" data-id="${achat.id}" data-color="${achat.color}" data-quantity="${achat.quantity}" data-price="${achat.price}"> 
       <div class="cart__item__img">
         <img src="${achat.imageUrl}" alt="${achat.altTxt}">
       </div>
@@ -85,9 +89,10 @@ function afficherProduit(panier) {
         </div>
       </div>
     </article>`
-  ).join("")
-  // On appel la fonction pour afficher les totaux (Quantité + Prix article)    
-  totauxPanier()
+    )
+    .join("");
+  // On appel la fonction pour afficher les totaux (Quantité + Prix article)
+  totauxPanier();
 }
 
 //*-------------------------------------------------------------------------
@@ -96,12 +101,12 @@ function afficherProduit(panier) {
 function modifierQuantite() {
   // On déclare et on cible tous les éléments avec la classe ".cart__item"
   const produitPanier = document.querySelectorAll(".cart__item");
-  // De façon dynamique graçe au dataset => 
+  // De façon dynamique graçe au dataset =>
   // On écoute les évènements (eQuantite) sur chaque input d'article concerné
   produitPanier.forEach((achat) => {
     achat.addEventListener("change", (eQuantite) => {
       // On appel les ressources de notre "panier" (local storage)
-      const panier = JSON.parse(localStorage.getItem("Produit"))
+      const panier = JSON.parse(localStorage.getItem("Produit"));
       // On fait une boucle sur les produits du Panier
       for (produit of panier) {
         if (
@@ -109,28 +114,28 @@ function modifierQuantite() {
           produit.id === achat.dataset.id &&
           achat.dataset.color === produit.color
         ) {
-          // Si la valeure est supérieur à 100 => 
+          // Si la valeure est supérieur à 100 =>
           // On envoi un message et on remplace la valeur par 100
           if (eQuantite.target.value > 100) {
-            alert("Vous avez dépassé la quantité limite")
-            eQuantite.target.value = 100
+            alert("Vous avez dépassé la quantité limite");
+            eQuantite.target.value = 100;
           }
           // Si la valeur est négative =>
           // On envoi un message et on remplace la valeur par 1
           else if (eQuantite.target.value < 0) {
-            alert("La quantité minimum est : 1")
-            eQuantite.target.value = 1
+            alert("La quantité minimum est : 1");
+            eQuantite.target.value = 1;
           }
           // On envoi les nouvelles données au local storage
-          localStorage.Produit = JSON.stringify(panier)
+          localStorage.Produit = JSON.stringify(panier);
           // On fait une mise à jour du dataset quantity
-          achat.dataset.quantity = eQuantite.target.value
+          achat.dataset.quantity = eQuantite.target.value;
           // On appel la fonction des "totauxPanier" dynamiquement
           totauxPanier();
         }
       }
-    })
-  })
+    });
+  });
 }
 
 //*-------------------------------------------------------------------------
@@ -138,13 +143,13 @@ function modifierQuantite() {
 //*-------------------------------------------------------------------------
 function supprimerProduit() {
   // On déclare et on cible tous les éléments ".cart__item .deleteItem"
-  const supprimerProduit = document.querySelectorAll(".cart__item .deleteItem")
+  const supprimerProduit = document.querySelectorAll(".cart__item .deleteItem");
   // Pour chaque produit
   supprimerProduit.forEach((produit) => {
     // On écoute au click (bouton "Supprimer") sur le produit concerné
     produit.addEventListener("click", () => {
       // On appel les ressources de notre "panier" (local storage)
-      const panier = JSON.parse(localStorage.getItem("Produit"))
+      const panier = JSON.parse(localStorage.getItem("Produit"));
       // On fait une boucle pour chaque élément du panier
       for (let a = 0, b = panier.length; a < b; a++) {
         if (
@@ -153,26 +158,28 @@ function supprimerProduit() {
           panier[a].color === produit.dataset.color
         ) {
           // On déclare une variable utile pour la suppression
-          const num = [a]
+          const num = [a];
           // On supprime 1 élément à l'indice num
-          panier.splice(num, 1)
-          // On renvoi un nouveau panier converti dans le Local Storage 
-          localStorage.Produit = JSON.stringify(panier)
+          panier.splice(num, 1);
+          // On renvoi un nouveau panier converti dans le Local Storage
+          localStorage.Produit = JSON.stringify(panier);
           // On supprime l'Affichage HTML
           const displayToDelete = document.querySelector(
-            `article[data-id="${produit.dataset.id}"][data-color="${produit.dataset.color}"]`)
-          displayToDelete.remove()
+            `article[data-id="${produit.dataset.id}"][data-color="${produit.dataset.color}"]`
+          );
+          displayToDelete.remove();
           // Si le Panier est vide
-          if (panier === null || panier.length == 0 ) {
-            // On vide le local storage                      
-            window.localStorage.clear()
+          if (panier === null || panier.length == 0) {
+            // On vide le local storage
+            window.localStorage.clear();
             // On affiche l'information "Votre panier est vide"
-            document.querySelector("#cartAndFormContainer").innerHTML = "<h1>Votre panier est vide</h1>"
+            document.querySelector("#cartAndFormContainer").innerHTML =
+              "<h1>Votre panier est vide</h1>";
           }
         }
       }
-    })
-  })
+    });
+  });
 }
 
 //*-------------------------------------------------------------------------
@@ -180,27 +187,21 @@ function supprimerProduit() {
 //*-------------------------------------------------------------------------
 function totauxPanier() {
   // On déclare des variables de "Total" en tant que nombre
-  let totalProduits = 0
-  let totalPrix = 0
+  let totalProduits = 0;
+  let totalPrix = 0;
   // On déclare et on cible toutes les classes ".cart__item"
-  const achats = document.querySelectorAll(".cart__item")
+  const achats = document.querySelectorAll(".cart__item");
   // Pour chaque élément (achat) des achats
   achats.forEach((achat) => {
     // On récupère les quantités des produits via les dataset
-    totalProduits += JSON.parse(Math.min(achat.dataset.quantity, 100))
+    totalProduits += JSON.parse(Math.min(achat.dataset.quantity, 100));
     // On calcul le prix panier total via les dataset
-    totalPrix += Math.min(achat.dataset.quantity, 100) * achat.dataset.price
+    totalPrix += Math.min(achat.dataset.quantity, 100) * achat.dataset.price;
   });
   // On affiche les résultats dans le HTML
-  document.getElementById("totalQuantity").textContent = totalProduits
-  document.getElementById("totalPrice").textContent = totalPrix
+  document.getElementById("totalQuantity").textContent = totalProduits;
+  document.getElementById("totalPrice").textContent = totalPrix;
 }
-
-
-
-
-
-
 
 //!-------------------------------------------------------------------------
 //!------------------------------ FORMULAIRE -------------------------------
@@ -210,26 +211,26 @@ function totauxPanier() {
 //*-------------------------------------------------------------------------
 function ecouteFormulaire() {
   // On cible le bouton "Commander !"
-  const boutonCommander = document.querySelector("#order")
+  const boutonCommander = document.querySelector("#order");
   // On écoute le bouton et au click => On appel la fonction "envoiFormulaire"
-  boutonCommander.addEventListener("click", (e) => envoiFormulaire(e))
+  boutonCommander.addEventListener("click", (e) => envoiFormulaire(e));
 
   // On cible l'input de la saisie
-  let prenomFormulaire = document.getElementById('firstName')
+  let prenomFormulaire = document.getElementById("firstName");
   // On écoute l'événement à l'input avec la fonction qui vérifie la validité de la saisie
-  prenomFormulaire.addEventListener('input', validationPrenom)
+  prenomFormulaire.addEventListener("input", validationPrenom);
 
-  let nomFormulaire = document.getElementById('lastName')
-  nomFormulaire.addEventListener('input', validationNom)
+  let nomFormulaire = document.getElementById("lastName");
+  nomFormulaire.addEventListener("input", validationNom);
 
-  let adresseFormulaire = document.getElementById('address')
-  adresseFormulaire.addEventListener('input', validationAdresse)
+  let adresseFormulaire = document.getElementById("address");
+  adresseFormulaire.addEventListener("input", validationAdresse);
 
-  let villeFormulaire = document.getElementById('city')
-  villeFormulaire.addEventListener('input', validationVille)
-  
-  let emailFormulaire = document.getElementById('email')
-  emailFormulaire.addEventListener('input', validationEmail)
+  let villeFormulaire = document.getElementById("city");
+  villeFormulaire.addEventListener("input", validationVille);
+
+  let emailFormulaire = document.getElementById("email");
+  emailFormulaire.addEventListener("input", validationEmail);
 }
 
 //*-------------------------------------------------------------------------
@@ -237,62 +238,68 @@ function ecouteFormulaire() {
 //*-------------------------------------------------------------------------
 function envoiFormulaire(e) {
   // On récupère les données du client
-  const client = donneeClient(e)
+  const client = donneeClient(e);
   // Si les informations sont manquantes, on retourne sans envoyer
-  if (client == null) return
+  if (client == null) return;
   // On envoye l'objet "client" qui contient toutes les données à l'API pour obtenir ID de commande
   fetch("http://localhost:3000/api/products/order", {
     method: "POST",
     headers: {
-      'Accept': 'application/json',
+      Accept: "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify(client),
   })
-  .then(res => res.json())
-  .then(res => {
-    alert("Votre commande a bien été effectuée !")
-    window.location.replace(`./confirmation.html?orderId=${res.orderId}`)
-  })
-  .catch((err) => {
-    alert (err.message)
-    console.log(err)
-  })
+    .then((res) => res.json())
+    .then((res) => {
+      alert("Votre commande a bien été effectuée !");
+      window.location.replace(`./confirmation.html?orderId=${res.orderId}`);
+    })
+    .catch((err) => {
+      alert(err.message);
+      console.log(err);
+    });
 }
 
 //*-------------------------------------------------------------------------
 //*-------------- Ensemble des données à transmettre à l'API ---------------
 //*-------------------------------------------------------------------------
 function donneeClient(e) {
-  // Si tous les éléments du formulaire sont valide, on récupère les données du client 
-  if (validationPrenom() && validationNom() && validationAdresse() && validationVille() && validationEmail()) {
-    const panier = JSON.parse(localStorage.getItem("Produit"))
-    const prenom = document.getElementById("firstName").value
-    const nom = document.getElementById("lastName").value
-    const adresse = document.getElementById("address").value
-    const ville = document.getElementById("city").value
-    const email = document.getElementById("email").value
+  // Si tous les éléments du formulaire sont valide, on récupère les données du client
+  if (
+    validationPrenom() &&
+    validationNom() &&
+    validationAdresse() &&
+    validationVille() &&
+    validationEmail()
+  ) {
+    const panier = JSON.parse(localStorage.getItem("Produit"));
+    const prenom = document.getElementById("firstName").value;
+    const nom = document.getElementById("lastName").value;
+    const adresse = document.getElementById("address").value;
+    const ville = document.getElementById("city").value;
+    const email = document.getElementById("email").value;
     // On récupère les ID des produits du client
-    const produitsIds = []
+    const produitsIds = [];
     panier.forEach((produit) => {
-      produitsIds.push(produit.id)
-    })
-    // On créer l'objet pour répondre aux attentes de l'API 
+      produitsIds.push(produit.id);
+    });
+    // On créer l'objet pour répondre aux attentes de l'API
     const informationsClient = {
       contact: {
         firstName: prenom,
         lastName: nom,
         address: adresse,
         city: ville,
-        email: email
+        email: email,
       },
-      products: produitsIds
-    }
-    return informationsClient
-  // Sinon on retourne une alerte
+      products: produitsIds,
+    };
+    return informationsClient;
+    // Sinon on retourne une alerte
   } else {
-    alert("Le formulaire n'est pas correctement rempli, veuillez réessayer.")
-    e.preventDefault()
+    alert("Le formulaire n'est pas correctement rempli, veuillez réessayer.");
+    e.preventDefault();
   }
 }
 
@@ -300,27 +307,28 @@ function donneeClient(e) {
 //*--------------------- Contrôle la saisie du Prénom ----------------------
 //*-------------------------------------------------------------------------
 function validationPrenom() {
-  let prenomInput = document.getElementById("firstName")
-  let prenomValidation = document.getElementById("firstName").value
-  let prenomMsgErreur = document.getElementById("firstNameErrorMsg")
-  let commande = document.getElementById("order")
-  
-  const prenomReGex = /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,24}$/i
-  let prenomResultat = prenomReGex.test(prenomValidation)
-  
-  if (prenomResultat == false ) {
-    prenomInput.style.backgroundColor = "red"
-    prenomInput.style.color = "white"
-    prenomMsgErreur.innerHTML = "Votre prénom doit comporter entre 3 et 24 lettres"
-    prenomMsgErreur.style.display = "inherit"
-    commande.disabled = true
-    return false
+  let prenomInput = document.getElementById("firstName");
+  let prenomValidation = document.getElementById("firstName").value;
+  let prenomMsgErreur = document.getElementById("firstNameErrorMsg");
+  let commande = document.getElementById("order");
+
+  const prenomReGex = /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,24}$/i;
+  let prenomResultat = prenomReGex.test(prenomValidation);
+
+  if (prenomResultat == false) {
+    prenomInput.style.backgroundColor = "red";
+    prenomInput.style.color = "white";
+    prenomMsgErreur.innerHTML =
+      "Votre prénom doit comporter entre 3 et 24 lettres";
+    prenomMsgErreur.style.display = "inherit";
+    commande.disabled = true;
+    return false;
   } else {
-    prenomMsgErreur.style.display = "none"
-    prenomInput.style.backgroundColor = "green"
-    prenomInput.style.color = "white"
-    commande.disabled = false
-    return true
+    prenomMsgErreur.style.display = "none";
+    prenomInput.style.backgroundColor = "green";
+    prenomInput.style.color = "white";
+    commande.disabled = false;
+    return true;
   }
 }
 
@@ -328,99 +336,101 @@ function validationPrenom() {
 //*----------------------- Contrôle la saisie du Nom -----------------------
 //*-------------------------------------------------------------------------
 function validationNom() {
-  let nomInput = document.getElementById("lastName")
-  let nomValidation = document.getElementById("lastName").value
-  let nomMsgErreur = document.getElementById("lastNameErrorMsg")
-  
-  const nomReGex = /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,24}$/i
-  let nomResultat = nomReGex.test(nomValidation)
-  
-  if (nomResultat == false ) {
-    nomInput.style.backgroundColor = "red"
-    nomInput.style.color = "white"
-    nomMsgErreur.innerHTML = "Votre nom doit comporter entre 3 et 24 lettres"
-    nomMsgErreur.style.display = "inherit"
-    return false
+  let nomInput = document.getElementById("lastName");
+  let nomValidation = document.getElementById("lastName").value;
+  let nomMsgErreur = document.getElementById("lastNameErrorMsg");
+
+  const nomReGex = /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,24}$/i;
+  let nomResultat = nomReGex.test(nomValidation);
+
+  if (nomResultat == false) {
+    nomInput.style.backgroundColor = "red";
+    nomInput.style.color = "white";
+    nomMsgErreur.innerHTML = "Votre nom doit comporter entre 3 et 24 lettres";
+    nomMsgErreur.style.display = "inherit";
+    return false;
   } else {
-    nomMsgErreur.style.display = "none"
-    nomInput.style.backgroundColor = "green"
-    nomInput.style.color = "white"
-    return true
+    nomMsgErreur.style.display = "none";
+    nomInput.style.backgroundColor = "green";
+    nomInput.style.color = "white";
+    return true;
   }
 }
-  
+
 //*-------------------------------------------------------------------------
 //*-------------------- Contrôle la saisie de l'Adresse --------------------
 //*-------------------------------------------------------------------------
 function validationAdresse() {
-  let adresseInput = document.getElementById("address")
-  let adresseValidation = document.getElementById("address").value
-  let adresseMsgErreur = document.getElementById("addressErrorMsg")
-  
-  const adresseRGEX = /^[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s\''\-]/
-  let adresseResultat = adresseRGEX.test(adresseValidation)
-  
-  if (adresseResultat == false ) {
-    adresseInput.style.backgroundColor = "red"
-    adresseInput.style.color = "white"
-    adresseMsgErreur.innerHTML = "Votre adresse ne doit pas comporter de caractères spéciaux"
-    adresseMsgErreur.style.display = "inherit"
-    return false
+  let adresseInput = document.getElementById("address");
+  let adresseValidation = document.getElementById("address").value;
+  let adresseMsgErreur = document.getElementById("addressErrorMsg");
+
+  const adresseRGEX = /^[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s\''\-]/;
+  let adresseResultat = adresseRGEX.test(adresseValidation);
+
+  if (adresseResultat == false) {
+    adresseInput.style.backgroundColor = "red";
+    adresseInput.style.color = "white";
+    adresseMsgErreur.innerHTML =
+      "Votre adresse ne doit pas comporter de caractères spéciaux";
+    adresseMsgErreur.style.display = "inherit";
+    return false;
   } else {
-    adresseMsgErreur.style.display = "none"
-    adresseInput.style.backgroundColor = "green"
-    adresseInput.style.color = "white"
-    return true
+    adresseMsgErreur.style.display = "none";
+    adresseInput.style.backgroundColor = "green";
+    adresseInput.style.color = "white";
+    return true;
   }
-}  
-        
+}
+
 //*-------------------------------------------------------------------------
 //*-------------------- Contrôle la saisie de la Ville ---------------------
 //*-------------------------------------------------------------------------
 function validationVille() {
-  let villeInput = document.getElementById("city")
-  let villeValidation = document.getElementById("city").value
-  let villeMsgErreur = document.getElementById("cityErrorMsg")
-  
-  const villeReGex = /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/
-  let villeResultat = villeReGex.test(villeValidation)
-  
-  
-  if (villeResultat == false ) {
-    villeInput.style.backgroundColor = "red"
-    villeInput.style.color = "white"
-    villeMsgErreur.innerHTML = "Votre ville doit comporter que des lettres et certains caractères spéciaux"
-    villeMsgErreur.style.display = "inherit"
-    return false
+  let villeInput = document.getElementById("city");
+  let villeValidation = document.getElementById("city").value;
+  let villeMsgErreur = document.getElementById("cityErrorMsg");
+
+  const villeReGex =
+    /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/;
+  let villeResultat = villeReGex.test(villeValidation);
+
+  if (villeResultat == false) {
+    villeInput.style.backgroundColor = "red";
+    villeInput.style.color = "white";
+    villeMsgErreur.innerHTML =
+      "Votre ville doit comporter que des lettres et certains caractères spéciaux";
+    villeMsgErreur.style.display = "inherit";
+    return false;
   } else {
-    villeMsgErreur.style.display = "none"
-    villeInput.style.backgroundColor = "green"
-    villeInput.style.color = "white"
-    return true
+    villeMsgErreur.style.display = "none";
+    villeInput.style.backgroundColor = "green";
+    villeInput.style.color = "white";
+    return true;
   }
 }
-      
+
 //*-------------------------------------------------------------------------
 //*--------------------- Contrôle la saisie de l'Email ---------------------
 //*-------------------------------------------------------------------------
 function validationEmail() {
-  let emailInput = document.getElementById("email")
-  let emailValidation = document.getElementById("email").value
-  let emailMsgErreur = document.getElementById("emailErrorMsg")
+  let emailInput = document.getElementById("email");
+  let emailValidation = document.getElementById("email").value;
+  let emailMsgErreur = document.getElementById("emailErrorMsg");
 
-  const emailReGex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
-  let emailResultat = emailReGex.test(emailValidation)
+  const emailReGex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  let emailResultat = emailReGex.test(emailValidation);
 
-  if (emailResultat == false ) {
-    emailInput.style.backgroundColor = "red"
-    emailInput.style.color = "white"
-    emailMsgErreur.innerHTML = "Exemple : support@kanap.com"
-    emailMsgErreur.style.display = "inherit"
-    return false
+  if (emailResultat == false) {
+    emailInput.style.backgroundColor = "red";
+    emailInput.style.color = "white";
+    emailMsgErreur.innerHTML = "Exemple : support@kanap.com";
+    emailMsgErreur.style.display = "inherit";
+    return false;
   } else {
-    emailMsgErreur.style.display = "none"
-    emailInput.style.backgroundColor = "green"
-    emailInput.style.color = "white"
-    return true
+    emailMsgErreur.style.display = "none";
+    emailInput.style.backgroundColor = "green";
+    emailInput.style.color = "white";
+    return true;
   }
 }
