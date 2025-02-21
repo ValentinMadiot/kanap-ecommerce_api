@@ -1,5 +1,0 @@
-[build]
-  plan = "node"
-
-[start]
-  cmd = "node server.js"
