@@ -1,0 +1,7 @@
+{
+  "build": {
+    "base": "node",
+    "buildCommand": "cd back && npm install",
+    "startCommand": "cd back && node server.js"
+  }
+}
