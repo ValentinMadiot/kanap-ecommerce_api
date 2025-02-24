@@ -1,15 +1,16 @@
 //*-------------------------------------------------------------------------
 //*------------------- Récupération des données de l'API -------------------
 //*-------------------------------------------------------------------------
-//! Si on es en local, il utilisera http://localhost:3000. Sinon, on utilisera l'URL du backend sur Railway.
+// On utilise l'URL du backend sur Railway.
 function getApiUrl() {
-  return window.location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "kanap-production-d0c8.up.railway.app";
+  // Vérifie si l'on est en environnement de production (Railway)
+  window.location.hostname === "kanap-production-d0c8.up.railway.app";
+  return "https://kanap-production-d0c8.up.railway.app";
 }
+
 // On récupère des données de l'API via fetch
 fetch(`${getApiUrl()}/api/products/`)
-  // On obtient la réponse de l'API qu'on converti au format JSON
+  // On obtient la réponse de l'API qu'on convertit au format JSON
   .then((res) => res.json())
   // Les données JSON sont appelées "produits"
   .then((produits) => {
@@ -19,9 +20,9 @@ fetch(`${getApiUrl()}/api/products/`)
     afficherProduits(produits);
   })
   // Si une erreur se produit => On remplace le contenu du titre h1
-  // avec "erreur 404" et on renvoi une erreur en console
+  // avec "erreur 404" et on renvoie une erreur en console
   .catch((err) => {
-    document.querySelector(".titles").innerHTML = "<h1>erreur 404<h1>";
+    document.querySelector(".titles").innerHTML = "<h1>erreur 404</h1>";
     console.log("API => erreur 404 : " + err);
   });
 

@@ -6,11 +6,10 @@ ecouteFormulaire();
 //*-------------------------------------------------------------------------
 //*-------------------- Récupération données de l'API ----------------------
 //*-------------------------------------------------------------------------
-//! Si on es en local, il utilisera http://localhost:3000. Sinon, on utilisera l'URL du backend sur Railway.
 function getApiUrl() {
-  return window.location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "kanap-production-d0c8.up.railway.app";
+  // Vérifie si l'on est en environnement de production (Railway)
+  window.location.hostname === "kanap-production-d0c8.up.railway.app";
+  return "https://kanap-production-d0c8.up.railway.app";
 }
 // On récupère des données de l'API via fetch
 fetch(`${getApiUrl()}/api/products/`)
@@ -249,7 +248,7 @@ function envoiFormulaire(e) {
   // Si les informations sont manquantes, on retourne sans envoyer
   if (client == null) return;
   // On envoye l'objet "client" qui contient toutes les données à l'API pour obtenir ID de commande
-  fetch("http://localhost:3000/api/products/order", {
+  fetch(`${getApiUrl()}/api/products/order`, {
     method: "POST",
     headers: {
       Accept: "application/json",

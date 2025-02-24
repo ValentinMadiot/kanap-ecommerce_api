@@ -10,11 +10,10 @@ console.log("ID du produit sélectionné :", id);
 //*-------------------------------------------------------------------------
 //*--- Récupération des données de l'API via l'ID du produit sélectionné ---
 //*-------------------------------------------------------------------------
-//! Si on es en local, il utilisera http://localhost:3000. Sinon, on utilisera l'URL du backend sur Railway.
 function getApiUrl() {
-  return window.location.hostname === "localhost"
-    ? "http://localhost:3000"
-    : "kanap-production-d0c8.up.railway.app";
+  // Vérifie si l'on est en environnement de production (Railway)
+  window.location.hostname === "kanap-production-d0c8.up.railway.app";
+  return "https://kanap-production-d0c8.up.railway.app";
 }
 // On récupère les données de l'API via l'ID du produit sélectionné
 fetch(`${getApiUrl()}/api/products/${id}`)
