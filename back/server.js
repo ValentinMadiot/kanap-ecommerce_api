@@ -5,7 +5,7 @@ const productRoutes = require("./routes/product");
 
 app.use(cors());
 
-// Configuration du CORS
+// Middleware pour configurer les en-têtes CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -23,11 +23,16 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Route principale
+app.get("/", (req, res) => {
+  res.send("Bienvenue sur le serveur Kanap Backend !");
+});
+
 // Routes API
 app.use("/api/products", productRoutes);
 
 // Définition du port
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
   console.log(`🚀 Serveur en ligne sur le port ${PORT}`);
