@@ -6,7 +6,14 @@ ecouteFormulaire();
 //*-------------------------------------------------------------------------
 //*-------------------- Récupération données de l'API ----------------------
 //*-------------------------------------------------------------------------
-fetch("http://localhost:3000/api/products/")
+//! Si on es en local, il utilisera http://localhost:3000. Sinon, on utilisera l'URL du backend sur Railway.
+function getApiUrl() {
+  return window.location.hostname === "localhost"
+    ? "http://localhost:3000"
+    : "kanap-production-d0c8.up.railway.app";
+}
+// On récupère des données de l'API via fetch
+fetch(`${getApiUrl()}/api/products/`)
   // On obtient la réponse de l'API qu'on converti au format JSON
   .then((res) => res.json())
   // Les données JSON sont appelées "produits"
