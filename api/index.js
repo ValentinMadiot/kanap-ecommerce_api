@@ -3,6 +3,9 @@ const cors = require("cors");
 const app = express();
 const productRoutes = require("../routes/product");
 
+console.log(process.env);
+console.log("Current directory:", __dirname);
+
 app.use(cors());
 
 // Middleware pour configurer les en-têtes CORS
