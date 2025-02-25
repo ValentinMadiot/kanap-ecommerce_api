@@ -1,5 +1,5 @@
 <div align="center">  
-    <a href="kanap-vm.vercel.app" target="_blank">  
+    <a href="https://kanap-vm.vercel.app/" target="_blank">  
       <img src="docs/preview.png" alt="Aperçu du projet">  
     </a>
     </br>  
