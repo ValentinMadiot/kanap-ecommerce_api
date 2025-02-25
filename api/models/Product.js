@@ -5,7 +5,7 @@ const products = [
     name: "Kanap Sinopé",
     price: 1849,
     imageUrl:
-      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/back/images/kanap01.jpeg",
+      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/api/images/kanap01.jpeg",
     description:
       "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     altTxt: "Photo d'un canapé bleu, deux places",
@@ -16,7 +16,7 @@ const products = [
     name: "Kanap Cyllène",
     price: 4499,
     imageUrl:
-      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/back/images/kanap02.jpeg",
+      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/api/images/kanap02.jpeg",
     description:
       "Morbi nec erat aliquam, sagittis urna non, laoreet justo. Etiam sit amet interdum diam, at accumsan lectus.",
     altTxt: "Photo d'un canapé jaune et noir, quattre places",
@@ -27,7 +27,7 @@ const products = [
     name: "Kanap Calycé",
     price: 3199,
     imageUrl:
-      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/back/images/kanap03.jpeg",
+      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/api/images/kanap03.jpeg",
     description:
       "Pellentesque fermentum arcu venenatis ex sagittis accumsan. Vivamus lacinia fermentum tortor.Mauris imperdiet tellus ante.",
     altTxt: "Photo d'un canapé d'angle, vert, trois places",
@@ -38,7 +38,7 @@ const products = [
     name: "Kanap Autonoé",
     price: 1499,
     imageUrl:
-      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/back/images/kanap04.jpeg",
+      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/api/images/kanap04.jpeg",
     description:
       "Donec mattis nisl tortor, nec blandit sapien fermentum at. Proin hendrerit efficitur fringilla. Lorem ipsum dolor sit amet.",
     altTxt: "Photo d'un canapé rose, une à deux place",
@@ -49,7 +49,7 @@ const products = [
     name: "Kanap Eurydomé",
     price: 2249,
     imageUrl:
-      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/back/images/kanap05.jpeg",
+      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/api/images/kanap05.jpeg",
     description:
       "Ut laoreet vulputate neque in commodo. Suspendisse maximus quis erat in sagittis. Donec hendrerit purus at congue aliquam.",
     altTxt: "Photo d'un canapé gris, trois places",
@@ -60,7 +60,7 @@ const products = [
     name: "Kanap Hélicé",
     price: 999,
     imageUrl:
-      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/back/images/kanap06.jpeg",
+      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/api/images/kanap06.jpeg",
     description:
       "Curabitur vel augue sit amet arcu aliquet interdum. Integer vel quam mi. Morbi nec vehicula mi, sit amet vestibulum.",
     altTxt: "Photo d'un canapé gris, deux places",
@@ -71,7 +71,7 @@ const products = [
     name: "Kanap Thyoné",
     price: 1999,
     imageUrl:
-      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/back/images/kanap07.jpeg",
+      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/api/images/kanap07.jpeg",
     description:
       "EMauris imperdiet tellus ante, sit amet pretium turpis molestie eu. Vestibulum et egestas eros. Vestibulum non lacus orci.",
     altTxt: "Photo d'un canapé rouge, deux places",
@@ -82,7 +82,7 @@ const products = [
     name: "Kanap orthosie",
     price: 3999,
     imageUrl:
-      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/back/images/kanap08.jpeg",
+      "https://raw.githubusercontent.com/ValentinMadiot/Kanap/main/api/images/kanap08.jpeg",
     description:
       "Mauris molestie laoreet finibus. Aenean scelerisque convallis lacus at dapibus. Morbi imperdiet enim metus rhoncus.",
     altTxt: "Photo d'un canapé rose, trois places",
