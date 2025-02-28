@@ -213,33 +213,38 @@ function ecouteFormulaire() {
 }
 
 async function envoiFormulaire(e) {
+  // On récupère les données du client
   const client = donneeClient(e);
+  if (!client) return;
 
-  if (client == null) return;
+  console.log("📤 Envoi de la requête:", JSON.stringify(client));
 
   try {
-    console.log("📤 Envoi de la requête:", JSON.stringify(client));
-
-    const res = await fetch(`${getApiUrl()}/api/products/order`, {
+    const response = await fetch(`${getApiUrl()}/api/products/order`, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify(client),
-      credentials: "include", // Ajouter cette ligne pour envoyer les cookies si nécessaire
     });
 
-    if (!res.ok) {
-      throw new Error(`Erreur HTTP: ${res.status} - ${res.statusText}`);
+    console.log("🔄 Réponse brute du serveur :", response);
+
+    if (!response.ok) {
+      throw new Error(
+        `Erreur HTTP : ${response.status} - ${response.statusText}`
+      );
     }
 
-    const data = await res.json();
+    const data = await response.json();
+    console.log("✅ Réponse JSON du serveur :", data);
+
     alert("Votre commande a bien été effectuée !");
     window.location.replace(`./confirmation.html?orderId=${data.orderId}`);
   } catch (err) {
-    console.error("Erreur:", err);
-    alert("Une erreur est survenue lors de l'envoi de la commande.");
+    console.error("❌ Erreur lors de l'envoi du formulaire :", err);
+    alert(`Une erreur est survenue : ${err.message}`);
   }
 }
 
