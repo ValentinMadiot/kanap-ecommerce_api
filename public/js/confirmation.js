@@ -1,23 +1,22 @@
-//*-------------------------------------------------------------------------
-//*------------------------- Appels les fonctions --------------------------
-//*-------------------------------------------------------------------------
-orderId()
-cacheLocalStorageVide()
+orderId();
+cacheLocalStorageVide();
 
-//*-------------------------------------------------------------------------
-//*--------------------- Récupérer et afficher orderId ---------------------
-//*-------------------------------------------------------------------------
-function orderId () {
-  let orderNumber = document.getElementById("orderId")
-  let baseUrl = (window.location).href
-  orderNumber.innerHTML = baseUrl.substring(baseUrl.lastIndexOf('=') + 1)
-  console.log("Numéro de commande :", orderNumber);
+function orderId() {
+  let orderNumberElement = document.getElementById("orderId");
+  let baseUrl = window.location.href;
+  let orderId = baseUrl.substring(baseUrl.lastIndexOf("=") + 1);
+
+  console.log("🔍 Numéro de commande extrait :", orderId);
+
+  if (orderNumberElement) {
+    orderNumberElement.innerHTML = orderId;
+  } else {
+    console.error("❌ Élément #orderId introuvable dans le DOM !");
+  }
 }
 
-//*-------------------------------------------------------------------------
-//*----------------------- Supprimer fichier panier ------------------------
-//*-------------------------------------------------------------------------
-function cacheLocalStorageVide () {
-  const localStorage = window.localStorage
-  localStorage.clear()
+function cacheLocalStorageVide() {
+  const localStorage = window.localStorage;
+  console.log("🗑️ Suppression du localStorage...");
+  localStorage.clear();
 }

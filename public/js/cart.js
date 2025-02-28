@@ -1,11 +1,5 @@
-//*-------------------------------------------------------------------------
-//*------ Appel la fonction qui écoute tous les inputs du formulaire -------
-//*-------------------------------------------------------------------------
 ecouteFormulaire();
 
-//*-------------------------------------------------------------------------
-//*-------------------- Récupération données de l'API ----------------------
-//*-------------------------------------------------------------------------
 function getApiUrl() {
   // Vérifie si l'on est en environnement de production (Railway)
   window.location.hostname === "kanap-production-d0c8.up.railway.app";
@@ -28,9 +22,6 @@ fetch(`${getApiUrl()}/api/products/`)
     console.log("API => erreur 404 : " + err);
   });
 
-//*-------------------------------------------------------------------------
-//*------- Récupérer les donner du produit qu'on a ajouté au panier --------
-//*-------------------------------------------------------------------------
 function recupererDonneesAchat(produits) {
   // On récupère les informations (id, nom, couleur) du/des produit(s) ajouté(s) dans notre panier
   const panier = JSON.parse(localStorage.getItem("Produit"));
@@ -64,9 +55,6 @@ function recupererDonneesAchat(produits) {
   }
 }
 
-//*-------------------------------------------------------------------------
-//*--------------- Afficher les produits sur la page panier ----------------
-//*-------------------------------------------------------------------------
 function afficherProduit(panier) {
   // On déclare et on cible sur quel section du HTML on veut afficher les produits du panier
   const produitPanier = document.querySelector("#cart__items");
@@ -101,9 +89,6 @@ function afficherProduit(panier) {
   totauxPanier();
 }
 
-//*-------------------------------------------------------------------------
-//*--------------- Modification de la Quantité d'un Produit ----------------
-//*-------------------------------------------------------------------------
 function modifierQuantite() {
   // On déclare et on cible tous les éléments avec la classe ".cart__item"
   const produitPanier = document.querySelectorAll(".cart__item");
@@ -144,9 +129,6 @@ function modifierQuantite() {
   });
 }
 
-//*-------------------------------------------------------------------------
-//*-------- Suppression du Panier : Local Storage + Affichage HTML ---------
-//*-------------------------------------------------------------------------
 function supprimerProduit() {
   // On déclare et on cible tous les éléments ".cart__item .deleteItem"
   const supprimerProduit = document.querySelectorAll(".cart__item .deleteItem");
@@ -188,9 +170,6 @@ function supprimerProduit() {
   });
 }
 
-//*-------------------------------------------------------------------------
-//*--------- Calcul et Affichage du Total Panier : Quantité + Prix ---------
-//*-------------------------------------------------------------------------
 function totauxPanier() {
   // On déclare des variables de "Total" en tant que nombre
   let totalProduits = 0;
@@ -209,12 +188,6 @@ function totauxPanier() {
   document.getElementById("totalPrice").textContent = totalPrix;
 }
 
-//!-------------------------------------------------------------------------
-//!------------------------------ FORMULAIRE -------------------------------
-//!-------------------------------------------------------------------------
-//*-------------------------------------------------------------------------
-//*--------------------------- Fonction d'écoute ---------------------------
-//*-------------------------------------------------------------------------
 function ecouteFormulaire() {
   // On cible le bouton "Commander !"
   const boutonCommander = document.querySelector("#order");
@@ -239,14 +212,14 @@ function ecouteFormulaire() {
   emailFormulaire.addEventListener("input", validationEmail);
 }
 
-//*-------------------------------------------------------------------------
-//*----------------- Envoi l'ensemble des données à l'API ------------------
-//*-------------------------------------------------------------------------
 function envoiFormulaire(e) {
   // On récupère les données du client
   const client = donneeClient(e);
   // Si les informations sont manquantes, on retourne sans envoyer
   if (client == null) return;
+
+  console.log("📤 Envoi de la requête:", JSON.stringify(client));
+
   // On envoye l'objet "client" qui contient toutes les données à l'API pour obtenir ID de commande
   fetch(`${getApiUrl()}/api/products/order`, {
     method: "POST",
@@ -256,20 +229,21 @@ function envoiFormulaire(e) {
     },
     body: JSON.stringify(client),
   })
-    .then((res) => res.json())
     .then((res) => {
+      console.log("🔍 Réponse brute:", res);
+      return res.json();
+    })
+    .then((res) => {
+      console.log("✅ Réponse JSON:", res.message);
       alert("Votre commande a bien été effectuée !");
       window.location.replace(`./confirmation.html?orderId=${res.orderId}`);
     })
     .catch((err) => {
-      alert(err.message);
-      console.log(err);
+      console.error("❌ Erreur:", err.message);
+      alert("Erreur lors de la commande. Vérifiez la console.");
     });
 }
 
-//*-------------------------------------------------------------------------
-//*-------------- Ensemble des données à transmettre à l'API ---------------
-//*-------------------------------------------------------------------------
 function donneeClient(e) {
   // Si tous les éléments du formulaire sont valide, on récupère les données du client
   if (
@@ -309,9 +283,6 @@ function donneeClient(e) {
   }
 }
 
-//*-------------------------------------------------------------------------
-//*--------------------- Contrôle la saisie du Prénom ----------------------
-//*-------------------------------------------------------------------------
 function validationPrenom() {
   let prenomInput = document.getElementById("firstName");
   let prenomValidation = document.getElementById("firstName").value;
@@ -338,9 +309,6 @@ function validationPrenom() {
   }
 }
 
-//*-------------------------------------------------------------------------
-//*----------------------- Contrôle la saisie du Nom -----------------------
-//*-------------------------------------------------------------------------
 function validationNom() {
   let nomInput = document.getElementById("lastName");
   let nomValidation = document.getElementById("lastName").value;
@@ -363,9 +331,6 @@ function validationNom() {
   }
 }
 
-//*-------------------------------------------------------------------------
-//*-------------------- Contrôle la saisie de l'Adresse --------------------
-//*-------------------------------------------------------------------------
 function validationAdresse() {
   let adresseInput = document.getElementById("address");
   let adresseValidation = document.getElementById("address").value;
@@ -389,9 +354,6 @@ function validationAdresse() {
   }
 }
 
-//*-------------------------------------------------------------------------
-//*-------------------- Contrôle la saisie de la Ville ---------------------
-//*-------------------------------------------------------------------------
 function validationVille() {
   let villeInput = document.getElementById("city");
   let villeValidation = document.getElementById("city").value;
@@ -416,9 +378,6 @@ function validationVille() {
   }
 }
 
-//*-------------------------------------------------------------------------
-//*--------------------- Contrôle la saisie de l'Email ---------------------
-//*-------------------------------------------------------------------------
 function validationEmail() {
   let emailInput = document.getElementById("email");
   let emailValidation = document.getElementById("email").value;

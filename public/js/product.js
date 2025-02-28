@@ -1,15 +1,9 @@
-//*-------------------------------------------------------------------------
-//*--------- Récupération des données de l'API via l'ID du produit ---------
-//*-------------------------------------------------------------------------
 // On récupère l'URL de la page avec URLSearchParams
 const params = new URLSearchParams(window.location.search);
 // On y ajoute ID du produit pour récupérer les informations de l'API
 const id = params.get("id");
 console.log("ID du produit sélectionné :", id);
 
-//*-------------------------------------------------------------------------
-//*--- Récupération des données de l'API via l'ID du produit sélectionné ---
-//*-------------------------------------------------------------------------
 function getApiUrl() {
   // Vérifie si l'on est en environnement de production (Railway)
   window.location.hostname === "kanap-production-d0c8.up.railway.app";
@@ -33,9 +27,6 @@ fetch(`${getApiUrl()}/api/products/${id}`)
     console.log("API => erreur 404 : " + err);
   });
 
-//*-------------------------------------------------------------------------
-//*-------------------- Afficher les données du produit --------------------
-//*-------------------------------------------------------------------------
 // On appel les fonctions créées avec en paramètre les données API à afficher
 function afficherProduit(produit) {
   creationNomOnglet(produit.name);
@@ -47,17 +38,11 @@ function afficherProduit(produit) {
   creationPanier(produit);
 }
 
-//*-------------------------------------------------------------------------
-//*----------- Créer le nom du produit dans l'onglet navigateur ------------
-//*-------------------------------------------------------------------------
 function creationNomOnglet(nom) {
   const nomProduit = document.querySelector("title");
   nomProduit.textContent = nom + " | Kanap";
 }
 
-//*-------------------------------------------------------------------------
-//*----------------------- Créer l'image du produit ------------------------
-//*-------------------------------------------------------------------------
 function creationImage(imageUrl, altTxt) {
   const divImg = document.querySelector(".item__img");
   const img = document.createElement("img");
@@ -66,33 +51,21 @@ function creationImage(imageUrl, altTxt) {
   divImg.appendChild(img);
 }
 
-//*-------------------------------------------------------------------------
-//*----------------------- Créer le titre du produit -----------------------
-//*-------------------------------------------------------------------------
 function creationTitre(nom) {
   const h1 = document.querySelector("#title");
   h1.textContent = nom;
 }
 
-//*-------------------------------------------------------------------------
-//*----------------------- Créer le prix du produit ------------------------
-//*-------------------------------------------------------------------------
 function creationPrix(prix) {
   const montant = document.querySelector("#price");
   montant.textContent = prix;
 }
 
-//*-------------------------------------------------------------------------
-//*-------------------- Créer le paragraphe du produit ---------------------
-//*-------------------------------------------------------------------------
 function creationParagraphe(description) {
   const p = document.querySelector("#description");
   p.textContent = description;
 }
 
-//*-------------------------------------------------------------------------
-//*--------------- Créer les options de couleurs du produit ----------------
-//*-------------------------------------------------------------------------
 function creationCouleurs(couleurs) {
   const selectionner = document.querySelector("#colors");
   couleurs.forEach((couleur) => {
@@ -103,9 +76,6 @@ function creationCouleurs(couleurs) {
   });
 }
 
-//*-------------------------------------------------------------------------
-//*------------- Créer un ou plusieurs produit dans le panier --------------
-//*-------------------------------------------------------------------------
 function creationPanier(produit) {
   // On écoute la réponse du boutton au clique de l'utilisateur
   const button = document.querySelector("#addToCart");
@@ -126,9 +96,6 @@ function creationPanier(produit) {
   return (panier = JSON.parse(localStorage.getItem("Produit")));
 }
 
-//*-------------------------------------------------------------------------
-//*-------------- Condition pour ajouter un article au panier --------------
-//*-------------------------------------------------------------------------
 function ajoutPanier(produit, quantite, couleur) {
   // Les informations sont stockés sous forme d'objet dans le local storage
   const achat = {
@@ -182,9 +149,6 @@ function ajoutPanier(produit, quantite, couleur) {
   }
 }
 
-//*-------------------------------------------------------------------------
-//*--------------- Confirme et redirige après l'ajout panier ---------------
-//*-------------------------------------------------------------------------
 const confirmationAchat = (message = undefined) => {
   // Si l'utilisateur clique sur OK => Redirigé sur la page panier
   if (message && window.confirm(message)) {
@@ -195,9 +159,6 @@ const confirmationAchat = (message = undefined) => {
   }
 };
 
-//*-------------------------------------------------------------------------
-//*------------------------- Alerte achat invalide -------------------------
-//*-------------------------------------------------------------------------
 function AchatInvalide(couleur, quantite) {
   // Si aucune couleur ET/OU quantité est séléctionné => alerte
   if (couleur == 0 || quantite == 0) {

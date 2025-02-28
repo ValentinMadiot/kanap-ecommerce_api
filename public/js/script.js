@@ -1,6 +1,3 @@
-//*-------------------------------------------------------------------------
-//*------------------- Récupération des données de l'API -------------------
-//*-------------------------------------------------------------------------
 // On utilise l'URL du backend sur Railway.
 function getApiUrl() {
   // Vérifie si l'on est en environnement de production (Railway)
@@ -26,9 +23,6 @@ fetch(`${getApiUrl()}/api/products/`)
     console.log("API => erreur 404 : " + err);
   });
 
-// *-------------------------------------------------------------------------
-// * ----------- Afficher les produits de l'api sur la page index -----------
-// *-------------------------------------------------------------------------
 function afficherProduits(produits) {
   // On déclare une variable qui cible l'ID de la section "#items"
   const tousLesProduits = document.querySelector("#items");
