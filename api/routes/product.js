@@ -6,7 +6,7 @@ router.get("/", productCtrl.getAllProducts);
 router.get("/:id", productCtrl.getOneProduct);
 // router.post("/order", productCtrl.orderProducts);
 router.post(
-  "/order",
+  "/api/products/order",
   (req, res, next) => {
     console.log("📥 Requête reçue sur /api/products/order !");
     console.log("🔹 Headers reçus :", req.headers);
