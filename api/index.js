@@ -15,6 +15,12 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 console.log("✅ CORS configuré avec :", corsOptions);
+// index.js
+
+// Middleware pour gérer les requêtes OPTIONS
+app.options("*", (req, res) => {
+  res.status(200).send();
+});
 
 // Middleware pour parser les requêtes
 app.use(express.urlencoded({ extended: true }));
