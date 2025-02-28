@@ -14,7 +14,7 @@ router.post(
 
     next();
   },
-  productCtrl.orderProducts(req, res, next)
+  productCtrl.orderProducts
 );
 
 module.exports = router;
