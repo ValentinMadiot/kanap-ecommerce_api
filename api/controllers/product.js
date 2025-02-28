@@ -22,6 +22,9 @@ exports.orderProducts = (req, res) => {
   console.log("📥 Requête POST reçue !");
   console.log("🔹 Corps de la requête :", req.body);
 
+  if (!req.body.contact || !req.body.products) {
+    return res.status(400).json({ error: "Données de commande incomplètes" });
+  }
   // Exemple de réponse pour tester
   res.status(201).json({ message: "Commande reçue", orderId: "123456789" });
 };
