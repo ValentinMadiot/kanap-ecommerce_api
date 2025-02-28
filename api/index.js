@@ -6,21 +6,15 @@ const productRoutes = require("./routes/product");
 console.log(process.env);
 console.log("Current directory:", __dirname);
 
-app.use(cors());
-
-// Middleware pour configurer les en-têtes CORS
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  next();
-});
+console.log("🛠️ Configuration CORS en cours...");
+const corsOptions = {
+  origin: ["https://kanap-vm.vercel.app", "http://localhost:4200"],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
+console.log("✅ CORS configuré avec :", corsOptions);
 
 // Middleware pour parser les requêtes
 app.use(express.urlencoded({ extended: true }));
