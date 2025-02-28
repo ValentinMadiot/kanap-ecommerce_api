@@ -212,36 +212,35 @@ function ecouteFormulaire() {
   emailFormulaire.addEventListener("input", validationEmail);
 }
 
-function envoiFormulaire(e) {
-  // On récupère les données du client
+async function envoiFormulaire(e) {
   const client = donneeClient(e);
-  // Si les informations sont manquantes, on retourne sans envoyer
+
   if (client == null) return;
 
-  console.log("📤 Envoi de la requête:", JSON.stringify(client));
+  try {
+    console.log("📤 Envoi de la requête:", JSON.stringify(client));
 
-  // On envoye l'objet "client" qui contient toutes les données à l'API pour obtenir ID de commande
-  fetch(`${getApiUrl()}/api/products/order`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(client),
-  })
-    .then((res) => {
-      console.log("🔍 Réponse brute:", res);
-      return res.json();
-    })
-    .then((res) => {
-      console.log("✅ Réponse JSON:", res.message);
-      alert("Votre commande a bien été effectuée !");
-      window.location.replace(`./confirmation.html?orderId=${res.orderId}`);
-    })
-    .catch((err) => {
-      console.error("❌ Erreur:", err.message);
-      alert("Erreur lors de la commande. Vérifiez la console.");
+    const res = await fetch(`${getApiUrl()}/api/products/order`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(client),
+      credentials: "include", // Ajouter cette ligne pour envoyer les cookies si nécessaire
     });
+
+    if (!res.ok) {
+      throw new Error(`Erreur HTTP: ${res.status} - ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    alert("Votre commande a bien été effectuée !");
+    window.location.replace(`./confirmation.html?orderId=${data.orderId}`);
+  } catch (err) {
+    console.error("Erreur:", err);
+    alert("Une erreur est survenue lors de l'envoi de la commande.");
+  }
 }
 
 function donneeClient(e) {

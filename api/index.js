@@ -3,19 +3,12 @@ const cors = require("cors");
 const app = express();
 const productRoutes = require("./routes/product");
 
-console.log(process.env);
-console.log("Current directory:", __dirname);
-
-console.log("🛠️ Configuration CORS en cours...");
-const corsOptions = {
-  origin: ["https://kanap-vm.vercel.app", "http://localhost:4200"],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-app.use(cors(corsOptions));
-console.log("✅ CORS configuré avec :", corsOptions);
-// index.js
+app.options("*", (req, res) => {
+  res.header("Access-Control-Allow-Origin", "https://kanap-vm.vercel.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.status(204).send();
+});
 
 // Middleware pour gérer les requêtes OPTIONS
 app.options("*", (req, res) => {
