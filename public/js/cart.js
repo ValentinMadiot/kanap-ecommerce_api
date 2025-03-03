@@ -226,20 +226,23 @@ function envoiFormulaire(e) {
     },
     body: JSON.stringify(client),
   })
-    .then((res) => res.json())
+    .then((res) => {
+      console.log("🟢 Réponse reçue du serveur :", res);
+      return res.json();
+    })
     .then((res) => {
       console.log("✅ Réponse de l'API :", res);
       if (res.orderId) {
-        alert("Votre commande a bien été effectuée !");
         console.log("🔄 Redirection vers confirmation.html...");
-        window.location.replace(`./confirmation.html?orderId=${res.orderId}`);
       } else {
         console.error("❌ L'API n'a pas renvoyé d'orderId !");
       }
+      alert("Votre commande a bien été effectuée !");
+      window.location.replace(`./confirmation.html?orderId=${res.orderId}`);
     })
     .catch((err) => {
       console.error("❌ Erreur lors de la commande :", err);
-      alert(err.message);
+      alert("Erreur lors de la commande : " + err.message);
     });
 }
 
@@ -278,7 +281,7 @@ function donneeClient(e) {
     // Sinon on retourne une alerte
   } else {
     alert("Le formulaire n'est pas correctement rempli, veuillez réessayer.");
-    e.preventDefault();
+    // e.preventDefault();
   }
 }
 

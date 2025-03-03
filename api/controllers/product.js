@@ -30,6 +30,8 @@ exports.getOneProduct = (req, res, next) => {
 // };
 
 exports.orderProducts = (req, res, next) => {
+  console.log("📥 Requête POST reçue :", req.body);
+
   if (
     !req.body.contact ||
     !req.body.contact.firstName ||
