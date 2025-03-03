@@ -228,12 +228,18 @@ function envoiFormulaire(e) {
   })
     .then((res) => res.json())
     .then((res) => {
-      alert("Votre commande a bien été effectuée !");
-      window.location.replace(`./confirmation.html?orderId=${res.orderId}`);
+      console.log("✅ Réponse de l'API :", res);
+      if (res.orderId) {
+        alert("Votre commande a bien été effectuée !");
+        console.log("🔄 Redirection vers confirmation.html...");
+        window.location.replace(`./confirmation.html?orderId=${res.orderId}`);
+      } else {
+        console.error("❌ L'API n'a pas renvoyé d'orderId !");
+      }
     })
     .catch((err) => {
+      console.error("❌ Erreur lors de la commande :", err);
       alert(err.message);
-      console.log(err);
     });
 }
 

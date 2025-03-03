@@ -1,15 +1,26 @@
-orderId();
-cacheLocalStorageVide();
+document.addEventListener("DOMContentLoaded", () => {
+  showOrderId();
+  clearLocalStorage();
+});
 
-function orderId() {
-  let orderNumber = document.getElementById("orderId");
+function showOrderId() {
+  let orderNumberElement = document.getElementById("orderId");
   let baseUrl = window.location.href;
-  orderNumber.innerHTML = baseUrl.substring(baseUrl.lastIndexOf("=") + 1);
-  console.log("🔍 Numéro de commande extrait :", orderId);
+  let extractedOrderId = baseUrl.substring(baseUrl.lastIndexOf("=") + 1);
+
+  console.log("🔍 Numéro de commande extrait :", extractedOrderId);
+
+  if (orderNumberElement && extractedOrderId) {
+    orderNumberElement.innerText = extractedOrderId;
+  } else {
+    console.error("❌ Impossible d'afficher le numéro de commande !");
+  }
 }
 
-function cacheLocalStorageVide() {
-  const localStorage = window.localStorage;
+function clearLocalStorage() {
   console.log("🗑️ Suppression du localStorage...");
-  localStorage.clear();
+  setTimeout(() => {
+    localStorage.clear();
+    console.log("✅ LocalStorage effacé !");
+  }, 500); // Petite pause pour être sûr que ça s'efface
 }
