@@ -212,40 +212,29 @@ function ecouteFormulaire() {
   emailFormulaire.addEventListener("input", validationEmail);
 }
 
-async function envoiFormulaire(e) {
+function envoiFormulaire(e) {
   // On récupère les données du client
   const client = donneeClient(e);
-  if (!client) return;
-
-  console.log("📤 Envoi de la requête:", JSON.stringify(client));
-
-  try {
-    const response = await fetch(`${getApiUrl()}/api/products/order`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(client),
+  // Si les informations sont manquantes, on retourne sans envoyer
+  if (client == null) return;
+  // On envoye l'objet "client" qui contient toutes les données à l'API pour obtenir ID de commande
+  fetch(`${getApiUrl()}/api/products/order`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(client),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      alert("Votre commande a bien été effectuée !");
+      window.location.replace(`./confirmation.html?orderId=${res.orderId}`);
+    })
+    .catch((err) => {
+      alert(err.message);
+      console.log(err);
     });
-
-    console.log("🔄 Réponse brute du serveur :", response);
-
-    if (!response.ok) {
-      throw new Error(
-        `Erreur HTTP : ${response.status} - ${response.statusText}`
-      );
-    }
-
-    const data = await response.json();
-    console.log("✅ Réponse JSON du serveur :", data);
-
-    alert("Votre commande a bien été effectuée !");
-    window.location.replace(`./confirmation.html?orderId=${data.orderId}`);
-  } catch (err) {
-    console.error("❌ Erreur lors de l'envoi du formulaire :", err);
-    alert(`Une erreur est survenue : ${err.message}`);
-  }
 }
 
 function donneeClient(e) {
