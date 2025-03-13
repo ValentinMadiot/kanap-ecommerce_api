@@ -1,13 +1,13 @@
 const { v4: uuidv4 } = require("uuid");
 const Product = require("../models/Product");
 
-exports.getAllProducts = (req, res, next) => {
+exports.getAllProducts = (req, res) => {
   Product.find()
     .then((products) => res.status(200).json(products))
     .catch(() => res.status(500).send(new Error("Database error!")));
 };
 
-exports.getOneProduct = (req, res, next) => {
+exports.getOneProduct = (req, res) => {
   Product.findById(req.params.id)
     .then((product) => {
       if (!product) {
@@ -18,18 +18,7 @@ exports.getOneProduct = (req, res, next) => {
     .catch(() => res.status(500).send(new Error("Database error!")));
 };
 
-// exports.orderProducts = (req, res) => {
-//   console.log("📥 Requête POST reçue !");
-//   console.log("🔹 Corps de la requête :", req.body);
-
-//   if (!req.body.contact || !req.body.products) {
-//     return res.status(400).json({ error: "Données de commande incomplètes" });
-//   }
-//   // Exemple de réponse pour tester
-//   res.status(201).json({ message: "Commande reçue", orderId: "123456789" });
-// };
-
-exports.orderProducts = (req, res, next) => {
+exports.orderProducts = (req, res) => {
   console.log("📥 Requête POST reçue :", req.body);
 
   if (
@@ -40,27 +29,30 @@ exports.orderProducts = (req, res, next) => {
     !req.body.contact.city ||
     !req.body.contact.email ||
     !req.body.products
-  ) {
+  )
     return res.status(400).send(new Error("Bad request!"));
-  }
 
-  let queries = req.body.products.map((productId) => {
-    return Product.findById(productId).then((product) => {
-      if (!product) {
-        throw new Error("Product not found: " + productId);
-      }
-      return product;
-    });
-  });
-
-  Promise.all(queries)
-    .then((products) => {
-      const orderId = uuidv4();
-      res.status(201).json({
-        contact: req.body.contact,
-        products: products,
-        orderId: orderId,
-      });
-    })
-    .catch((error) => res.status(500).json({ error: error.message }));
+  const orderId = uuidv4();
+  res.status(201).json({ orderId });
 };
+
+//   let queries = req.body.products.map((productId) => {
+//     return Product.findById(productId).then((product) => {
+//       if (!product) {
+//         throw new Error("Product not found: " + productId);
+//       }
+//       return product;
+//     });
+//   });
+
+//   Promise.all(queries)
+//     .then((products) => {
+//       const orderId = uuidv4();
+//       res.status(201).json({
+//         contact: req.body.contact,
+//         products: products,
+//         orderId: orderId,
+//       });
+//     })
+//     .catch((error) => res.status(500).json({ error: error.message }));
+// };

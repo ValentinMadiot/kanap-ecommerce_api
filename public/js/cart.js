@@ -1,9 +1,9 @@
 ecouteFormulaire();
 
 function getApiUrl() {
-  // Vérifie si l'on est en environnement de production (Railway)
-  window.location.hostname === "kanap-production-d0c8.up.railway.app";
-  return "https://kanap-production-d0c8.up.railway.app";
+  return window.location.hostname === "kanap-vm.vercel.app"
+    ? "https://kanap-production-d0c8.up.railway.app"
+    : "http://localhost:4200";
 }
 // On récupère des données de l'API via fetch
 fetch(`${getApiUrl()}/api/products/`)
@@ -190,7 +190,7 @@ function totauxPanier() {
 
 function ecouteFormulaire() {
   // On cible le bouton "Commander !"
-  const boutonCommander = document.querySelector("#order");
+  const boutonCommander = document.getElementById("orderId");
   // On écoute le bouton et au click => On appel la fonction "envoiFormulaire"
   boutonCommander.addEventListener("click", (e) => envoiFormulaire(e));
 
@@ -213,6 +213,7 @@ function ecouteFormulaire() {
 }
 
 function envoiFormulaire(e) {
+  e.preventDefault();
   // On récupère les données du client
   const client = donneeClient(e);
   // Si les informations sont manquantes, on retourne sans envoyer
