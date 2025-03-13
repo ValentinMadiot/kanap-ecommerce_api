@@ -1,101 +1,134 @@
 document.addEventListener("DOMContentLoaded", function () {
-  displayCart();
+  fetchProductsAndDisplayCart();
+  ecouteFormulaire();
 });
 
-function displayCart() {
-  let cart = JSON.parse(localStorage.getItem("Produit")) || [];
-  let cartContainer = document.querySelector("#cart__items");
-  cartContainer.innerHTML = "";
+function getApiUrl() {
+  return window.location.hostname === "kanap-vm.vercel.app"
+    ? "https://kanap-production-d0c8.up.railway.app"
+    : "http://localhost:4200";
+}
 
-  if (cart.length === 0) {
-    cartContainer.innerHTML = "<p>Votre panier est vide.</p>";
+function fetchProductsAndDisplayCart() {
+  fetch(`${getApiUrl()}/api/products/`)
+    .then((res) => res.json())
+    .then((produits) => recupererDonneesAchat(produits))
+    .catch((err) => {
+      document.querySelector("#cartAndFormContainer").innerHTML =
+        "<h1>Erreur 404</h1>";
+      console.error("API => erreur 404 : ", err);
+    });
+}
+
+function recupererDonneesAchat(produits) {
+  const panier = JSON.parse(localStorage.getItem("Produit")) || [];
+  if (panier.length === 0) {
+    document.querySelector("#cartAndFormContainer").innerHTML =
+      "<h1>Votre panier est vide</h1>";
     return;
   }
 
-  cart.forEach((item, index) => {
-    fetch(getApiUrl() + "/api/products/" + item.id)
-      .then((response) => response.json())
-      .then((productData) => {
-        cartContainer.innerHTML += `
-                    <article class="cart__item" data-id="${item.id}" data-color="${item.color}">
-                        <div class="cart__item__img">
-                            <img src="${productData.imageUrl}" alt="${productData.altTxt}">
-                        </div>
-                        <div class="cart__item__content">
-                            <div class="cart__item__content__description">
-                                <h2>${productData.name}</h2>
-                                <p>Couleur : ${item.color}</p>
-                                <p>Prix : ${productData.price} €</p>
-                            </div>
-                            <div class="cart__item__content__settings">
-                                <div class="cart__item__content__settings__quantity">
-                                    <p>Qté : </p>
-                                    <input type="number" class="itemQuantity" data-index="${index}" value="${item.quantity}" min="1" max="100">
-                                </div>
-                                <div class="cart__item__content__settings__delete">
-                                    <p class="deleteItem" data-index="${index}">Supprimer</p>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                `;
-        updateCartListeners();
-        updateTotal();
-      })
-      .catch((error) =>
-        console.error("Erreur de récupération du produit:", error)
-      );
+  panier.forEach((achat) => {
+    const produit = produits.find((p) => p._id === achat.id);
+    if (produit) {
+      Object.assign(achat, {
+        name: produit.name,
+        price: produit.price,
+        imageUrl: produit.imageUrl,
+        altTxt: produit.altTxt,
+      });
+    }
   });
+
+  afficherProduit(panier);
+  modifierQuantite();
+  supprimerProduit();
 }
 
-function updateCartListeners() {
+function afficherProduit(panier) {
+  const produitPanier = document.querySelector("#cart__items");
+  produitPanier.innerHTML = panier
+    .map(
+      (achat) => `
+    <article class="cart__item" data-id="${achat.id}" data-color="${achat.color}">
+      <div class="cart__item__img">
+        <img src="${achat.imageUrl}" alt="${achat.altTxt}">
+      </div>
+      <div class="cart__item__content">
+        <div class="cart__item__content__description">
+          <h2>${achat.name}</h2>
+          <p>Couleur : ${achat.color}</p>
+          <p>Prix : ${achat.price} €</p>
+        </div>
+        <div class="cart__item__content__settings">
+          <div class="cart__item__content__settings__quantity">
+            <p>Qté : </p>
+            <input type="number" class="itemQuantity" data-id="${achat.id}" data-color="${achat.color}" value="${achat.quantity}" min="1" max="100">
+          </div>
+          <div class="cart__item__content__settings__delete">
+            <p class="deleteItem" data-id="${achat.id}" data-color="${achat.color}">Supprimer</p>
+          </div>
+        </div>
+      </div>
+    </article>`
+    )
+    .join("");
+  totauxPanier();
+}
+
+function modifierQuantite() {
   document.querySelectorAll(".itemQuantity").forEach((input) => {
-    input.addEventListener("change", (event) => {
-      let cart = JSON.parse(localStorage.getItem("Produit")) || [];
-      let index = event.target.dataset.index;
-      cart[index].quantity = parseInt(event.target.value);
-      localStorage.setItem("Produit", JSON.stringify(cart));
-      updateTotal();
-    });
-  });
-
-  document.querySelectorAll(".deleteItem").forEach((button) => {
-    button.addEventListener("click", (event) => {
-      let cart = JSON.parse(localStorage.getItem("Produit")) || [];
-      let index = event.target.dataset.index;
-      cart.splice(index, 1);
-      localStorage.setItem("Produit", JSON.stringify(cart));
-      displayCart();
-    });
-  });
-}
-
-function updateTotal() {
-  let cart = JSON.parse(localStorage.getItem("Produit")) || [];
-  let totalQuantity = 0;
-  let totalPrice = 0;
-
-  cart.forEach((item) => {
-    fetch(getApiUrl() + "/api/products/" + item.id)
-      .then((response) => response.json())
-      .then((productData) => {
-        totalQuantity += item.quantity;
-        totalPrice += productData.price * item.quantity;
-        document.querySelector("#totalQuantity").textContent = totalQuantity;
-        document.querySelector("#totalPrice").textContent = totalPrice;
-      })
-      .catch((error) =>
-        console.error("Erreur de récupération du produit pour le total:", error)
+    input.addEventListener("change", (e) => {
+      let panier = JSON.parse(localStorage.getItem("Produit")) || [];
+      let produit = panier.find(
+        (item) =>
+          item.id === e.target.dataset.id &&
+          item.color === e.target.dataset.color
       );
+      if (produit) {
+        produit.quantity = Math.min(100, Math.max(1, parseInt(e.target.value)));
+        localStorage.setItem("Produit", JSON.stringify(panier));
+        totauxPanier();
+      }
+    });
   });
 }
 
-// Validation du formulaire et envoi de commande
+function supprimerProduit() {
+  document.querySelectorAll(".deleteItem").forEach((button) => {
+    button.addEventListener("click", () => {
+      let panier = JSON.parse(localStorage.getItem("Produit")) || [];
+      panier = panier.filter(
+        (item) =>
+          !(
+            item.id === button.dataset.id && item.color === button.dataset.color
+          )
+      );
+      localStorage.setItem("Produit", JSON.stringify(panier));
+      fetchProductsAndDisplayCart();
+    });
+  });
+}
+
+function totauxPanier() {
+  let panier = JSON.parse(localStorage.getItem("Produit")) || [];
+  let totalQuantity = panier.reduce((acc, item) => acc + item.quantity, 0);
+  let totalPrice = panier.reduce(
+    (acc, item) => acc + item.price * item.quantity,
+    0
+  );
+  document.getElementById("totalQuantity").textContent = totalQuantity;
+  document.getElementById("totalPrice").textContent = totalPrice;
+}
+
+function ecouteFormulaire() {
+  document.querySelector("#order").addEventListener("click", submitOrder);
+}
+
 function submitOrder(event) {
   event.preventDefault();
-
-  let cart = JSON.parse(localStorage.getItem("Produit")) || [];
-  if (cart.length === 0) {
+  let panier = JSON.parse(localStorage.getItem("Produit")) || [];
+  if (panier.length === 0) {
     alert("Votre panier est vide !");
     return;
   }
@@ -110,10 +143,10 @@ function submitOrder(event) {
 
   let orderData = {
     contact,
-    products: cart.map((item) => item.id),
+    products: panier.map((item) => item.id),
   };
 
-  fetch(getApiUrl() + "/api/products/order", {
+  fetch(`${getApiUrl()}/api/products/order`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(orderData),
@@ -121,15 +154,13 @@ function submitOrder(event) {
     .then((response) => response.json())
     .then((orderResponse) => {
       localStorage.removeItem("Produit");
-      window.location.href =
-        "confirmation.html?orderId=" + orderResponse.orderId;
+      window.location.href = `confirmation.html?orderId=${orderResponse.orderId}`;
     })
-    .catch((error) =>
-      console.error("Erreur lors de l'envoi de la commande:", error)
-    );
+    .catch((error) => {
+      console.error("Erreur lors de l'envoi de la commande:", error);
+      alert("Erreur lors de la commande");
+    });
 }
-
-document.querySelector("#order").addEventListener("click", submitOrder);
 
 // ecouteFormulaire();
 
