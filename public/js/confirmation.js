@@ -23,5 +23,4 @@ function clearLocalStorage() {
     localStorage.clear();
     console.log("✅ LocalStorage effacé !");
   });
-  // }, 500); // Petite pause pour être sûr que ça s'efface
 }

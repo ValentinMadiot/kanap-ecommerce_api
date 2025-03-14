@@ -11,17 +11,6 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// **Gérer manuellement les requêtes OPTIONS (preflight)**
-// app.options("*", (req, res) => {
-//   res.header("Access-Control-Allow-Origin", req.headers.origin);
-//   res.header(
-//     "Access-Control-Allow-Methods",
-//     "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS"
-//   );
-//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-//   res.status(204).end();
-// });
-
 // Middleware pour parser les requêtes
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

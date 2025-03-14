@@ -35,24 +35,3 @@ exports.orderProducts = (req, res) => {
   const orderId = uuidv4();
   res.status(201).json({ orderId });
 };
-
-//   let queries = req.body.products.map((productId) => {
-//     return Product.findById(productId).then((product) => {
-//       if (!product) {
-//         throw new Error("Product not found: " + productId);
-//       }
-//       return product;
-//     });
-//   });
-
-//   Promise.all(queries)
-//     .then((products) => {
-//       const orderId = uuidv4();
-//       res.status(201).json({
-//         contact: req.body.contact,
-//         products: products,
-//         orderId: orderId,
-//       });
-//     })
-//     .catch((error) => res.status(500).json({ error: error.message }));
-// };
