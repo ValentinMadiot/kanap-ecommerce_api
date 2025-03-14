@@ -33,7 +33,7 @@ function recupererDonneesAchat(produits) {
     if (produit) {
       Object.assign(achat, {
         name: produit.name,
-        price: produit.price,
+        price: produit.price || 0,
         imageUrl: produit.imageUrl,
         altTxt: produit.altTxt,
       });
@@ -50,7 +50,9 @@ function afficherProduit(panier) {
   produitPanier.innerHTML = panier
     .map(
       (achat) => `
-    <article class="cart__item" data-id="${achat.id}" data-color="${achat.color}">
+    <article class="cart__item" data-id="${achat.id}" data-color="${
+        achat.color
+      }" data-quantity="${achat.quantity}" data-price="${achat.price}">
       <div class="cart__item__img">
         <img src="${achat.imageUrl}" alt="${achat.altTxt}">
       </div>
@@ -58,15 +60,23 @@ function afficherProduit(panier) {
         <div class="cart__item__content__description">
           <h2>${achat.name}</h2>
           <p>Couleur : ${achat.color}</p>
-          <p>Prix : ${achat.price} €</p>
+          <p>Prix : ${
+            achat.price ? achat.price + " €" : "Prix indisponible"
+          }</p>
         </div>
         <div class="cart__item__content__settings">
           <div class="cart__item__content__settings__quantity">
             <p>Qté : </p>
-            <input type="number" class="itemQuantity" data-id="${achat.id}" data-color="${achat.color}" value="${achat.quantity}" min="1" max="100">
+            <input type="number" class="itemQuantity" data-id="${
+              achat.id
+            }" data-color="${achat.color}" value="${
+        achat.quantity
+      }" min="1" max="100">
           </div>
           <div class="cart__item__content__settings__delete">
-            <p class="deleteItem" data-id="${achat.id}" data-color="${achat.color}">Supprimer</p>
+            <p class="deleteItem" data-id="${achat.id}" data-color="${
+        achat.color
+      }">Supprimer</p>
           </div>
         </div>
       </div>
@@ -78,7 +88,7 @@ function afficherProduit(panier) {
 
 function modifierQuantite() {
   document.querySelectorAll(".itemQuantity").forEach((input) => {
-    input.addEventListener("change", (e) => {
+    input.addEventListener("input", (e) => {
       let panier = JSON.parse(localStorage.getItem("Produit")) || [];
       let produit = panier.find(
         (item) =>
@@ -86,7 +96,10 @@ function modifierQuantite() {
           item.color === e.target.dataset.color
       );
       if (produit) {
-        produit.quantity = Math.min(100, Math.max(1, parseInt(e.target.value)));
+        produit.quantity = Math.min(
+          100,
+          Math.max(1, parseInt(e.target.value) || 1)
+        );
         localStorage.setItem("Produit", JSON.stringify(panier));
         totauxPanier();
       }
@@ -110,72 +123,87 @@ function supprimerProduit() {
   });
 }
 
+// Mise à jour des totaux du panier
 function totauxPanier() {
-  let panier = JSON.parse(localStorage.getItem("Produit")) || [];
-  let totalQuantity = panier.reduce((acc, item) => acc + item.quantity, 0);
-  let totalPrice = panier.reduce(
-    (acc, item) => acc + (item.price * item.quantity || 0),
-    0
+  let totalProduits = 0;
+  let totalPrix = 0;
+  const achats = document.querySelectorAll(".cart__item");
+
+  achats.forEach((achat) => {
+    const quantite = Math.min(achat.dataset.quantity, 100);
+    const prix = achat.dataset.price;
+    totalProduits += JSON.parse(quantite);
+    totalPrix += quantite * prix;
+  });
+
+  document.getElementById("totalQuantity").textContent = totalProduits;
+  document.getElementById("totalPrice").textContent = totalPrix;
+}
+
+// Validation en temps réel des champs du formulaire
+function validationChamp(inputId, regex, msgErreurId, message) {
+  const input = document.getElementById(inputId);
+  const valeur = input.value;
+  const msgErreur = document.getElementById(msgErreurId);
+
+  if (!regex.test(valeur)) {
+    input.style.backgroundColor = "red";
+    input.style.color = "white";
+    msgErreur.innerHTML = message;
+    msgErreur.style.display = "inherit";
+    return false;
+  } else {
+    msgErreur.style.display = "none";
+    input.style.backgroundColor = "green";
+    input.style.color = "white";
+    return true;
+  }
+}
+
+document.getElementById("firstName").addEventListener("input", () => {
+  validationChamp(
+    "firstName",
+    /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,24}$/i,
+    "firstNameErrorMsg",
+    "Votre prénom doit comporter entre 3 et 24 lettres"
   );
-  document.getElementById("totalQuantity").textContent = totalQuantity;
-  document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
-}
+});
 
-function ecouteFormulaire() {
-  document.querySelector("#order").addEventListener("click", submitOrder);
-}
+document.getElementById("lastName").addEventListener("input", () => {
+  validationChamp(
+    "lastName",
+    /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,24}$/i,
+    "lastNameErrorMsg",
+    "Votre nom doit comporter entre 3 et 24 lettres"
+  );
+});
 
-function submitOrder(event) {
-  event.preventDefault();
-  let panier = JSON.parse(localStorage.getItem("Produit")) || [];
-  if (panier.length === 0) {
-    alert("Votre panier est vide !");
-    return;
-  }
+document.getElementById("address").addEventListener("input", () => {
+  validationChamp(
+    "address",
+    /^[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s'\-]/,
+    "addressErrorMsg",
+    "Votre adresse ne doit pas comporter de caractères spéciaux"
+  );
+});
 
-  let contact = {
-    firstName: document.querySelector("#firstName").value.trim(),
-    lastName: document.querySelector("#lastName").value.trim(),
-    address: document.querySelector("#address").value.trim(),
-    city: document.querySelector("#city").value.trim(),
-    email: document.querySelector("#email").value.trim(),
-  };
+document.getElementById("city").addEventListener("input", () => {
+  validationChamp(
+    "city",
+    /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/,
+    "cityErrorMsg",
+    "Votre ville doit comporter uniquement des lettres et certains caractères spéciaux"
+  );
+});
 
-  const regex = {
-    firstName: /^[a-zA-ZÀ-ÿ-]{3,24}$/,
-    lastName: /^[a-zA-ZÀ-ÿ-]{3,24}$/,
-    address: /^[a-zA-Z0-9À-ÿ\s,'-]{5,50}$/,
-    city: /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/,
-    email: /^[\w.-]+@[\w-]+\.[a-z]{2,4}$/,
-  };
-
-  for (let key in contact) {
-    if (!regex[key].test(contact[key])) {
-      alert(`Le champ ${key} est invalide.`);
-      return;
-    }
-  }
-
-  let orderData = {
-    contact,
-    products: panier.map((item) => item.id),
-  };
-
-  fetch(`${getApiUrl()}/api/products/order`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(orderData),
-  })
-    .then((response) => response.json())
-    .then((orderResponse) => {
-      localStorage.removeItem("Produit");
-      window.location.href = `confirmation.html?orderId=${orderResponse.orderId}`;
-    })
-    .catch((error) => {
-      console.error("Erreur lors de l'envoi de la commande:", error);
-      alert("Erreur lors de la commande");
-    });
-}
+document.getElementById("email").addEventListener("input", () => {
+  validationChamp(
+    "email",
+    /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+    "emailErrorMsg",
+    "Exemple : support@kanap.com"
+  );
+});
 
 // ecouteFormulaire();
 
