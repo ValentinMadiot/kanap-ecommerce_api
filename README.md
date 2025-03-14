@@ -56,6 +56,20 @@ J'ai apporté des améliorations au projet initial afin de le rendre déployable
 git clone git@github.com:ValentinMadiot/kanap-ecommerce_api.git
 ```
 
-### ▶️ Lancer le projet
+### 📦 Installer les dépendances /api
+
+```bash
+npm install
+```
+
+### ▶️ Lancer le backend en local
+
+```bash
+npm start
+```
+
+Le serveur sera accessible à l'adresse : http://localhost:4200
+
+### 🖥️ Lancer le projet
 
 Utilisez Live Server pour un rechargement en temps réel.

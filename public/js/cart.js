@@ -86,38 +86,41 @@ function afficherProduit(panier) {
   totauxPanier();
 }
 
-document.querySelectorAll(".itemQuantity").forEach((input) => {
-  input.addEventListener("change", (e) => {
-    let panier = JSON.parse(localStorage.getItem("Produit")) || [];
+function modifierQuantite() {
+  document.querySelectorAll(".itemQuantity").forEach((input) => {
+    input.addEventListener("change", (e) => {
+      let panier = JSON.parse(localStorage.getItem("Produit")) || [];
 
-    let produitModifie = panier.find(
-      (produit) =>
-        produit.id === input.dataset.id && produit.color === input.dataset.color
-    );
+      let produitModifie = panier.find(
+        (produit) =>
+          produit.id === input.dataset.id &&
+          produit.color === input.dataset.color
+      );
 
-    if (produitModifie) {
-      let nouvelleQuantite = parseInt(e.target.value);
-      if (nouvelleQuantite > 100) {
-        alert("La quantité maximale est 100");
-        nouvelleQuantite = 100;
-      } else if (nouvelleQuantite < 1) {
-        alert("La quantité minimale est 1");
-        nouvelleQuantite = 1;
+      if (produitModifie) {
+        let nouvelleQuantite = parseInt(e.target.value);
+        if (nouvelleQuantite > 100) {
+          alert("La quantité maximale est 100");
+          nouvelleQuantite = 100;
+        } else if (nouvelleQuantite < 1) {
+          alert("La quantité minimale est 1");
+          nouvelleQuantite = 1;
+        }
+
+        produitModifie.quantity = nouvelleQuantite;
+        localStorage.setItem("Produit", JSON.stringify(panier));
+
+        // Met à jour dynamiquement le dataset de l'élément
+        let parent = input.closest(".cart__item");
+        if (parent) {
+          parent.dataset.quantity = nouvelleQuantite;
+        }
+
+        totauxPanier(); // Recalcule immédiatement le total
       }
-
-      produitModifie.quantity = nouvelleQuantite;
-      localStorage.setItem("Produit", JSON.stringify(panier));
-
-      // Met à jour dynamiquement le dataset de l'élément
-      let parent = input.closest(".cart__item");
-      if (parent) {
-        parent.dataset.quantity = nouvelleQuantite;
-      }
-
-      totauxPanier(); // Recalcule immédiatement le total
-    }
+    });
   });
-});
+}
 
 function supprimerProduit() {
   document.querySelectorAll(".deleteItem").forEach((button) => {
