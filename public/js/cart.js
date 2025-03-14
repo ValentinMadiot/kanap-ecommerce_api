@@ -47,7 +47,7 @@ function recupererDonneesAchat(produits) {
 
 function afficherProduit(panier) {
   const produitPanier = document.querySelector("#cart__items");
-  produitPanier.innerHTML = panier
+  produitPanier.innerHTML += panier
     .map(
       (achat) => `
     <article class="cart__item" data-id="${achat.id}" data-color="${
