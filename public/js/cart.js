@@ -114,11 +114,11 @@ function totauxPanier() {
   let panier = JSON.parse(localStorage.getItem("Produit")) || [];
   let totalQuantity = panier.reduce((acc, item) => acc + item.quantity, 0);
   let totalPrice = panier.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+    (acc, item) => acc + (item.price * item.quantity || 0),
     0
   );
   document.getElementById("totalQuantity").textContent = totalQuantity;
-  document.getElementById("totalPrice").textContent = totalPrice;
+  document.getElementById("totalPrice").textContent = totalPrice.toFixed(2);
 }
 
 function ecouteFormulaire() {
@@ -134,12 +134,27 @@ function submitOrder(event) {
   }
 
   let contact = {
-    firstName: document.querySelector("#firstName").value,
-    lastName: document.querySelector("#lastName").value,
-    address: document.querySelector("#address").value,
-    city: document.querySelector("#city").value,
-    email: document.querySelector("#email").value,
+    firstName: document.querySelector("#firstName").value.trim(),
+    lastName: document.querySelector("#lastName").value.trim(),
+    address: document.querySelector("#address").value.trim(),
+    city: document.querySelector("#city").value.trim(),
+    email: document.querySelector("#email").value.trim(),
   };
+
+  const regex = {
+    firstName: /^[a-zA-ZÀ-ÿ-]{3,24}$/,
+    lastName: /^[a-zA-ZÀ-ÿ-]{3,24}$/,
+    address: /^[a-zA-Z0-9À-ÿ\s,'-]{5,50}$/,
+    city: /^[a-zA-ZÀ-ÿ\s'-]{2,50}$/,
+    email: /^[\w.-]+@[\w-]+\.[a-z]{2,4}$/,
+  };
+
+  for (let key in contact) {
+    if (!regex[key].test(contact[key])) {
+      alert(`Le champ ${key} est invalide.`);
+      return;
+    }
+  }
 
   let orderData = {
     contact,
@@ -447,122 +462,5 @@ function submitOrder(event) {
 //   } else {
 //     alert("Le formulaire n'est pas correctement rempli, veuillez réessayer.");
 //     // e.preventDefault();
-//   }
-// }
-
-// function validationPrenom() {
-//   let prenomInput = document.getElementById("firstName");
-//   let prenomValidation = document.getElementById("firstName").value;
-//   let prenomMsgErreur = document.getElementById("firstNameErrorMsg");
-//   let commande = document.getElementById("order");
-
-//   const prenomReGex = /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,24}$/i;
-//   let prenomResultat = prenomReGex.test(prenomValidation);
-
-//   if (prenomResultat == false) {
-//     prenomInput.style.backgroundColor = "red";
-//     prenomInput.style.color = "white";
-//     prenomMsgErreur.innerHTML =
-//       "Votre prénom doit comporter entre 3 et 24 lettres";
-//     prenomMsgErreur.style.display = "inherit";
-//     commande.disabled = true;
-//     return false;
-//   } else {
-//     prenomMsgErreur.style.display = "none";
-//     prenomInput.style.backgroundColor = "green";
-//     prenomInput.style.color = "white";
-//     commande.disabled = false;
-//     return true;
-//   }
-// }
-
-// function validationNom() {
-//   let nomInput = document.getElementById("lastName");
-//   let nomValidation = document.getElementById("lastName").value;
-//   let nomMsgErreur = document.getElementById("lastNameErrorMsg");
-
-//   const nomReGex = /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{3,24}$/i;
-//   let nomResultat = nomReGex.test(nomValidation);
-
-//   if (nomResultat == false) {
-//     nomInput.style.backgroundColor = "red";
-//     nomInput.style.color = "white";
-//     nomMsgErreur.innerHTML = "Votre nom doit comporter entre 3 et 24 lettres";
-//     nomMsgErreur.style.display = "inherit";
-//     return false;
-//   } else {
-//     nomMsgErreur.style.display = "none";
-//     nomInput.style.backgroundColor = "green";
-//     nomInput.style.color = "white";
-//     return true;
-//   }
-// }
-
-// function validationAdresse() {
-//   let adresseInput = document.getElementById("address");
-//   let adresseValidation = document.getElementById("address").value;
-//   let adresseMsgErreur = document.getElementById("addressErrorMsg");
-
-//   const adresseRGEX = /^[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s\''\-]/;
-//   let adresseResultat = adresseRGEX.test(adresseValidation);
-
-//   if (adresseResultat == false) {
-//     adresseInput.style.backgroundColor = "red";
-//     adresseInput.style.color = "white";
-//     adresseMsgErreur.innerHTML =
-//       "Votre adresse ne doit pas comporter de caractères spéciaux";
-//     adresseMsgErreur.style.display = "inherit";
-//     return false;
-//   } else {
-//     adresseMsgErreur.style.display = "none";
-//     adresseInput.style.backgroundColor = "green";
-//     adresseInput.style.color = "white";
-//     return true;
-//   }
-// }
-
-// function validationVille() {
-//   let villeInput = document.getElementById("city");
-//   let villeValidation = document.getElementById("city").value;
-//   let villeMsgErreur = document.getElementById("cityErrorMsg");
-
-//   const villeReGex =
-//     /^([a-zA-Z\u0080-\u024F]+(?:. |-| |'))*[a-zA-Z\u0080-\u024F]*$/;
-//   let villeResultat = villeReGex.test(villeValidation);
-
-//   if (villeResultat == false) {
-//     villeInput.style.backgroundColor = "red";
-//     villeInput.style.color = "white";
-//     villeMsgErreur.innerHTML =
-//       "Votre ville doit comporter que des lettres et certains caractères spéciaux";
-//     villeMsgErreur.style.display = "inherit";
-//     return false;
-//   } else {
-//     villeMsgErreur.style.display = "none";
-//     villeInput.style.backgroundColor = "green";
-//     villeInput.style.color = "white";
-//     return true;
-//   }
-// }
-
-// function validationEmail() {
-//   let emailInput = document.getElementById("email");
-//   let emailValidation = document.getElementById("email").value;
-//   let emailMsgErreur = document.getElementById("emailErrorMsg");
-
-//   const emailReGex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-//   let emailResultat = emailReGex.test(emailValidation);
-
-//   if (emailResultat == false) {
-//     emailInput.style.backgroundColor = "red";
-//     emailInput.style.color = "white";
-//     emailMsgErreur.innerHTML = "Exemple : support@kanap.com";
-//     emailMsgErreur.style.display = "inherit";
-//     return false;
-//   } else {
-//     emailMsgErreur.style.display = "none";
-//     emailInput.style.backgroundColor = "green";
-//     emailInput.style.color = "white";
-//     return true;
 //   }
 // }
