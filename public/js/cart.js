@@ -87,36 +87,39 @@ function afficherProduit(panier) {
 }
 
 function modifierQuantite() {
-  document.querySelectorAll(".itemQuantity").forEach((achat) => {
-    achat.addEventListener("change", (eQuantite) => {
-      // On appel les ressources de notre "panier" (local storage)
-      const panier = JSON.parse(localStorage.getItem("Produit"));
-      // On fait une boucle sur les produits du Panier
-      for (produit of panier) {
-        if (
-          // Si ( id + color ) sont similaires
-          produit.id === achat.dataset.id &&
-          achat.dataset.color === produit.color
-        ) {
-          // Si la valeure est supérieur à 100 =>
-          // On envoi un message et on remplace la valeur par 100
-          if (eQuantite.target.value > 100) {
-            alert("Vous avez dépassé la quantité limite");
-            eQuantite.target.value = 100;
-          }
-          // Si la valeur est négative =>
-          // On envoi un message et on remplace la valeur par 1
-          else if (eQuantite.target.value < 0) {
-            alert("La quantité minimum est : 1");
-            eQuantite.target.value = 1;
-          }
-          // On envoi les nouvelles données au local storage
-          localStorage.Produit = JSON.stringify(panier);
-          // On fait une mise à jour du dataset quantity
-          achat.dataset.quantity = eQuantite.target.value;
-          // On appel la fonction des "totauxPanier" dynamiquement
-          totauxPanier();
+  document.querySelectorAll(".itemQuantity").forEach((input) => {
+    input.addEventListener("change", (event) => {
+      let panier = JSON.parse(localStorage.getItem("Produit")) || [];
+
+      // Trouver le produit dans le panier
+      let produit = panier.find(
+        (item) =>
+          item.id === input.dataset.id && item.color === input.dataset.color
+      );
+
+      if (produit) {
+        let nouvelleQuantite = Number(event.target.value);
+
+        // Vérifications des limites de quantité
+        if (nouvelleQuantite > 100) {
+          alert("Vous avez dépassé la quantité limite !");
+          nouvelleQuantite = 100;
+        } else if (nouvelleQuantite < 1) {
+          alert("La quantité minimum est 1 !");
+          nouvelleQuantite = 1;
         }
+
+        // Mise à jour de la quantité
+        produit.quantity = nouvelleQuantite;
+
+        // Mettre à jour le localStorage
+        localStorage.setItem("Produit", JSON.stringify(panier));
+
+        // Mettre à jour dynamiquement le dataset du DOM
+        input.dataset.quantity = nouvelleQuantite;
+
+        // Recalculer les totaux
+        totauxPanier();
       }
     });
   });
