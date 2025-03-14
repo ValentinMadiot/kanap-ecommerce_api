@@ -231,13 +231,50 @@ function submitOrder(event) {
     return;
   }
 
+  // Vérification des champs du formulaire
   let contact = {
-    firstName: document.querySelector("#firstName").value,
-    lastName: document.querySelector("#lastName").value,
-    address: document.querySelector("#address").value,
-    city: document.querySelector("#city").value,
-    email: document.querySelector("#email").value,
+    firstName: document.querySelector("#firstName").value.trim(),
+    lastName: document.querySelector("#lastName").value.trim(),
+    address: document.querySelector("#address").value.trim(),
+    city: document.querySelector("#city").value.trim(),
+    email: document.querySelector("#email").value.trim(),
   };
+
+  if (
+    !validationChamp(
+      "firstName",
+      /^[a-zA-ZÀ-ÿ\s-]{3,24}$/,
+      "firstNameErrorMsg",
+      "Votre prénom doit comporter entre 3 et 24 lettres"
+    ) ||
+    !validationChamp(
+      "lastName",
+      /^[a-zA-ZÀ-ÿ\s-]{3,24}$/,
+      "lastNameErrorMsg",
+      "Votre nom doit comporter entre 3 et 24 lettres"
+    ) ||
+    !validationChamp(
+      "address",
+      /^[a-zA-Z0-9À-ÿ\s,'-]{5,100}$/,
+      "addressErrorMsg",
+      "Adresse invalide"
+    ) ||
+    !validationChamp(
+      "city",
+      /^[a-zA-ZÀ-ÿ\s-]{2,50}$/,
+      "cityErrorMsg",
+      "Nom de ville invalide"
+    ) ||
+    !validationChamp(
+      "email",
+      /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+      "emailErrorMsg",
+      "Email invalide"
+    )
+  ) {
+    alert("Veuillez remplir correctement tous les champs du formulaire.");
+    return;
+  }
 
   let orderData = {
     contact,
@@ -251,11 +288,14 @@ function submitOrder(event) {
   })
     .then((response) => response.json())
     .then((orderResponse) => {
+      if (!orderResponse.orderId) {
+        throw new Error("Numéro de commande non reçu");
+      }
       localStorage.removeItem("Produit");
       window.location.href = `confirmation.html?orderId=${orderResponse.orderId}`;
     })
     .catch((error) => {
       console.error("Erreur lors de l'envoi de la commande:", error);
-      alert("Erreur lors de la commande");
+      alert("Erreur lors de la commande, veuillez réessayer.");
     });
 }
