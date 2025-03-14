@@ -87,21 +87,36 @@ function afficherProduit(panier) {
 }
 
 function modifierQuantite() {
-  document.querySelectorAll(".itemQuantity").forEach((input) => {
-    input.addEventListener("input", (e) => {
-      let panier = JSON.parse(localStorage.getItem("Produit")) || [];
-      let produit = panier.find(
-        (item) =>
-          item.id === e.target.dataset.id &&
-          item.color === e.target.dataset.color
-      );
-      if (produit) {
-        produit.quantity = Math.min(
-          100,
-          Math.max(1, parseInt(e.target.value) || 1)
-        );
-        localStorage.setItem("Produit", JSON.stringify(panier));
-        totauxPanier();
+  document.querySelectorAll(".itemQuantity").forEach((achat) => {
+    achat.addEventListener("change", (eQuantite) => {
+      // On appel les ressources de notre "panier" (local storage)
+      const panier = JSON.parse(localStorage.getItem("Produit"));
+      // On fait une boucle sur les produits du Panier
+      for (produit of panier) {
+        if (
+          // Si ( id + color ) sont similaires
+          produit.id === achat.dataset.id &&
+          achat.dataset.color === produit.color
+        ) {
+          // Si la valeure est supérieur à 100 =>
+          // On envoi un message et on remplace la valeur par 100
+          if (eQuantite.target.value > 100) {
+            alert("Vous avez dépassé la quantité limite");
+            eQuantite.target.value = 100;
+          }
+          // Si la valeur est négative =>
+          // On envoi un message et on remplace la valeur par 1
+          else if (eQuantite.target.value < 0) {
+            alert("La quantité minimum est : 1");
+            eQuantite.target.value = 1;
+          }
+          // On envoi les nouvelles données au local storage
+          localStorage.Produit = JSON.stringify(panier);
+          // On fait une mise à jour du dataset quantity
+          achat.dataset.quantity = eQuantite.target.value;
+          // On appel la fonction des "totauxPanier" dynamiquement
+          totauxPanier();
+        }
       }
     });
   });
@@ -129,10 +144,10 @@ function totauxPanier() {
   const achats = document.querySelectorAll(".cart__item");
 
   achats.forEach((achat) => {
-    const quantite = Math.min(achat.dataset.quantity, 100);
-    const prix = achat.dataset.price;
-    totalProduits += JSON.parse(quantite);
-    totalPrix += quantite * prix;
+    // On récupère les quantités des produits via les dataset
+    totalProduits += JSON.parse(Math.min(achat.dataset.quantity, 100));
+    // On calcul le prix panier total via les dataset
+    totalPrix += Math.min(achat.dataset.quantity, 100) * achat.dataset.price;
   });
 
   document.getElementById("totalQuantity").textContent = totalProduits;
