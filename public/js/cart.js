@@ -91,7 +91,6 @@ function modifierQuantite() {
     input.addEventListener("change", (event) => {
       let panier = JSON.parse(localStorage.getItem("Produit")) || [];
 
-      // Trouver le produit dans le panier
       let produit = panier.find(
         (item) =>
           item.id === input.dataset.id && item.color === input.dataset.color
@@ -115,10 +114,11 @@ function modifierQuantite() {
         // Mettre à jour le localStorage
         localStorage.setItem("Produit", JSON.stringify(panier));
 
-        // Mettre à jour dynamiquement le dataset du DOM
-        input.dataset.quantity = nouvelleQuantite;
+        // Mettre à jour dynamiquement l'affichage
+        input.value = nouvelleQuantite; // Mettre à jour l'input
+        input.dataset.quantity = nouvelleQuantite; // Mettre à jour le dataset
 
-        // Recalculer les totaux
+        // Mettre à jour le total affiché dynamiquement
         totauxPanier();
       }
     });
