@@ -123,7 +123,6 @@ function supprimerProduit() {
   });
 }
 
-// Mise à jour des totaux du panier
 function totauxPanier() {
   let totalProduits = 0;
   let totalPrix = 0;
@@ -140,7 +139,10 @@ function totauxPanier() {
   document.getElementById("totalPrice").textContent = totalPrix;
 }
 
-// Validation en temps réel des champs du formulaire
+function ecouteFormulaire() {
+  document.querySelector("#order").addEventListener("click", submitOrder);
+}
+
 function validationChamp(inputId, regex, msgErreurId, message) {
   const input = document.getElementById(inputId);
   const valeur = input.value;
@@ -204,6 +206,43 @@ document.getElementById("email").addEventListener("input", () => {
     "Exemple : support@kanap.com"
   );
 });
+
+function submitOrder(event) {
+  event.preventDefault();
+  let panier = JSON.parse(localStorage.getItem("Produit")) || [];
+  if (panier.length === 0) {
+    alert("Votre panier est vide !");
+    return;
+  }
+
+  let contact = {
+    firstName: document.querySelector("#firstName").value,
+    lastName: document.querySelector("#lastName").value,
+    address: document.querySelector("#address").value,
+    city: document.querySelector("#city").value,
+    email: document.querySelector("#email").value,
+  };
+
+  let orderData = {
+    contact,
+    products: panier.map((item) => item.id),
+  };
+
+  fetch(`${getApiUrl()}/api/products/order`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(orderData),
+  })
+    .then((response) => response.json())
+    .then((orderResponse) => {
+      localStorage.removeItem("Produit");
+      window.location.href = `confirmation.html?orderId=${orderResponse.orderId}`;
+    })
+    .catch((error) => {
+      console.error("Erreur lors de l'envoi de la commande:", error);
+      alert("Erreur lors de la commande");
+    });
+}
 
 // ecouteFormulaire();
 
