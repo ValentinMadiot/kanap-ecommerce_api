@@ -98,65 +98,38 @@ function creationPanier(produit) {
 }
 
 function ajoutPanier(produit, quantite, couleur) {
-  // Les informations sont stockés sous forme d'objet dans le local storage
   const achat = {
     id: produit._id,
     color: couleur,
     quantity: Number(quantite),
   };
-  // On créer une variable panier avec comme clé "Produit" dans le local storage
-  let panier = JSON.parse(localStorage.getItem("Produit"));
-  // Si le panier est vide => création d'un tableau + push du 1er produit
-  if (panier == null) {
-    panier = [];
-    panier.push(achat);
-    localStorage.setItem("Produit", JSON.stringify(panier));
-    // Confirme l'ajout au panier
-    confirmationAchat();
-    // Sinon le panier n'est pas vide => ...
+
+  let panier = JSON.parse(localStorage.getItem("Produit")) || [];
+
+  // Vérifier si le produit existe déjà dans le panier
+  let produitExistant = panier.find(
+    (item) => item.id === produit._id && item.color === couleur
+  );
+
+  if (produitExistant) {
+    produitExistant.quantity = Math.min(
+      produitExistant.quantity + achat.quantity,
+      100
+    );
   } else {
-    // On fait une boucle sur les éléments panier
-    for (i = 0; i < panier.length; i++) {
-      // Si le produit est similaire (id/couleur) => Ajout de quantité
-      if (panier[i].id == produit._id && panier[i].color == couleur) {
-        return (
-          // Math.min renvoie la plus petite des 2 valeurs, pas plus de 100
-          (panier[i].quantity = Math.min(
-            panier[i].quantity + achat.quantity,
-            100
-          )),
-          localStorage.setItem("Produit", JSON.stringify(panier)),
-          // Confirme l'ajout au panier
-          confirmationAchat()
-        );
-      }
-    }
-    // On fait une boucle sur les éléments panier
-    for (i = 0; i < panier.length; i++) {
-      // Si le produit à (un ID similaire ET une couleur différente) OU un ID différent
-      if (
-        (panier[i].id == produit._id && panier[i].color != couleur) ||
-        panier[i].id != produit._id
-      ) {
-        return (
-          // Ajouter un nouveau produit dans le panier
-          panier.push(achat),
-          localStorage.setItem("Produit", JSON.stringify(panier)),
-          // Confirme l'ajout au panier
-          confirmationAchat()
-        );
-      }
-    }
+    panier.push(achat);
   }
+
+  // Mettre à jour le localStorage
+  localStorage.setItem("Produit", JSON.stringify(panier));
+
+  // Confirmation de l'ajout
+  confirmationAchat();
 }
 
 const confirmationAchat = (message = undefined) => {
-  // Si l'utilisateur clique sur OK => Redirigé sur la page panier
   if (message && window.confirm(message)) {
     window.location.href = "cart.html";
-    // Si l'utilisateur clique sur ANNULER => Reste sur la page du produit
-  } else {
-    window.close;
   }
 };
 
