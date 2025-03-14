@@ -147,14 +147,15 @@ function totauxPanier() {
   const achats = document.querySelectorAll(".cart__item");
 
   achats.forEach((achat) => {
-    // On récupère les quantités des produits via les dataset
-    totalProduits += JSON.parse(Math.min(achat.dataset.quantity, 100));
-    // On calcul le prix panier total via les dataset
-    totalPrix += Math.min(achat.dataset.quantity, 100) * achat.dataset.price;
+    let quantite = Math.min(parseInt(achat.dataset.quantity), 100); // Convertir en nombre
+    let prix = parseFloat(achat.dataset.price); // Convertir en nombre flottant
+
+    totalProduits += quantite;
+    totalPrix += quantite * prix;
   });
 
   document.getElementById("totalQuantity").textContent = totalProduits;
-  document.getElementById("totalPrice").textContent = totalPrix;
+  document.getElementById("totalPrice").textContent = totalPrix.toFixed(2); // Affichage propre du prix
 }
 
 function ecouteFormulaire() {
