@@ -41,7 +41,7 @@ function afficherProduit(produit) {
 
 function creationNomOnglet(nom) {
   const nomProduit = document.querySelector("title");
-  nomProduit.textContent = nom + " | Kanap";
+  nomProduit.textContent = nom + " – Kanap";
 }
 
 function creationImage(imageUrl, altTxt) {
