@@ -3,6 +3,7 @@
     "baseDirectory": "api",
     "command": "npm install"
   },
+
   "start": {
     "command": "npm start"
   }
