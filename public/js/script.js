@@ -1,7 +1,11 @@
-// On utilise l'URL du backend sur Railway.
+// Détection automatique de l'URL de l'API (Railway en production, localhost en développement)
 function getApiUrl() {
-  // Vérifie si l'on est en environnement de production (Railway)
-  window.location.hostname === "kanap-production-d0c8.up.railway.app";
+  const hostname = window.location.hostname;
+  // Si on est en local (Live Server ou localhost)
+  if (hostname === "127.0.0.1" || hostname === "localhost") {
+    return "http://localhost:4200"; // URL de l'API en local
+  }
+  // Sinon, on utilise l'URL du backend déployé sur Railway
   return "https://kanap-production-d0c8.up.railway.app";
 }
 
@@ -26,9 +30,10 @@ fetch(`${getApiUrl()}/api/products/`)
 function afficherProduits(produits) {
   // On déclare une variable qui cible l'ID de la section "#items"
   const tousLesProduits = document.querySelector("#items");
+
   // On fait une boucle pour chaque indice "produit" des "produits" de l'API
   for (const produit of produits) {
-    // Création de : a > article > img + h3 + p avec les valeurs dynamique de l'API
+    // Création de : a > article > img + h3 + p avec les valeurs dynamiques de l'API
     tousLesProduits.innerHTML += `<a href="./product.html?id=${produit._id}">
       <article>
         <img src="${produit.imageUrl}" alt="${produit.altTxt}">

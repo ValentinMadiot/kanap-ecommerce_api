@@ -1,6 +1,6 @@
 <div align="center">  
     <a href="https://kanap-vm.vercel.app/" target="_blank">  
-      <img src="docs/preview.png" alt="Aperçu du projet">  
+      <img src=".docs/preview.png" alt="Aperçu du projet">  
     </a>
     </br>  
     </br>  
@@ -19,7 +19,7 @@
 
 Ce projet consiste à développer un site e-commerce en JavaScript Vanilla, mettant en avant des fonctionnalités dynamiques et une expérience utilisateur fluide sans dépendre de frameworks externes. Le site intègre une architecture simple et efficace, avec des affichages dynamiques de produits, une gestion du panier via localStorage, et un design responsive en HTML et CSS.
 
-📂 Pour plus de détails, consultez le [dossier](/docs/).
+📂 Pour plus de détails, consultez le [dossier](/.docs/).
 
 ## <br /> <a name="technologies">🛠️ Technologies</a>
 
