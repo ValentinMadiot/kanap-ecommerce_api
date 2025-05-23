@@ -25,7 +25,6 @@ Ce projet consiste à développer un site e-commerce en JavaScript Vanilla, mett
 
 - Frontend : HTML, CSS et JavaScript pur pour un affichage dynamique des produits et un design responsive.
 - Backend : Node.js et Express pour la gestion du serveur et la création d'une API REST.
-- Base de données : MongoDB pour stocker et gérer les produits et commandes.
 
 ## <br /> <a name="fonctionnalités">🎯 Fonctionnalités</a>
 
@@ -39,7 +38,7 @@ Ce projet consiste à développer un site e-commerce en JavaScript Vanilla, mett
 J'ai apporté des améliorations au projet initial afin de le rendre déployable :
 
 - Refonte de l'architecture pour une meilleure organisation et évolutivité.
-- Déploiement du backend sur Railway pour une gestion efficace des ressources.
+- Déploiement du backend sur Render pour une gestion efficace des ressources.
 - Hébergement du frontend sur Vercel pour des performances optimales.
 
 ## <br /> <a name="installation">🚀 Installation</a>
