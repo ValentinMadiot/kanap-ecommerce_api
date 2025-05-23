@@ -5,9 +5,8 @@ const id = params.get("id");
 console.log("ID du produit sélectionné :", id);
 
 function getApiUrl() {
-  // Vérifie si l'on est en environnement de production (Railway)
   return window.location.hostname === "kanap-vm.vercel.app"
-    ? "https://kanap-production-d0c8.up.railway.app"
+    ? "https://kanap-ecommerce-api.onrender.com"
     : "http://localhost:4200";
 }
 // On récupère les données de l'API via l'ID du produit sélectionné

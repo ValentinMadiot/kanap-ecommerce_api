@@ -1,12 +1,10 @@
-// Détection automatique de l'URL de l'API (Railway en production, localhost en développement)
 function getApiUrl() {
   const hostname = window.location.hostname;
   // Si on est en local (Live Server ou localhost)
   if (hostname === "127.0.0.1" || hostname === "localhost") {
     return "http://localhost:4200"; // URL de l'API en local
   }
-  // Sinon, on utilise l'URL du backend déployé sur Railway
-  return "https://kanap-production-d0c8.up.railway.app";
+  return "https://kanap-ecommerce-api.onrender.com";
 }
 
 // On récupère des données de l'API via fetch

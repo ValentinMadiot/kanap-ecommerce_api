@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function getApiUrl() {
   return window.location.hostname === "kanap-vm.vercel.app"
-    ? "https://kanap-production-d0c8.up.railway.app"
+    ? "https://kanap-ecommerce-api.onrender.com"
     : "http://localhost:4200";
 }
 
