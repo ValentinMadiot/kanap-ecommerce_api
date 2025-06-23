@@ -2,7 +2,7 @@ function getApiUrl() {
   const hostname = window.location.hostname;
   // Si on est en local (Live Server ou localhost)
   if (hostname === "127.0.0.1" || hostname === "localhost") {
-    return "http://localhost:4200"; // URL de l'API en local
+    return "http://localhost:8080"; // URL de l'API en local
   }
   return "https://kanap-ecommerce-api.onrender.com";
 }

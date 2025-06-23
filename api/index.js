@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 
 // 2) Autorisation CORS dynamique
 const whitelist = [
-  "http://localhost:4200", // ton backend
+  "http://localhost:8080", // ton backend
   "http://127.0.0.1:5500", // ton front local VS Code live server
   "https://kanap-vm.vercel.app", // front en ligne
 ];
@@ -49,7 +49,7 @@ app.get("/", (req, res) => {
 app.use("/api/products", productRoutes);
 
 // 6) Port config
-const PORT = process.env.PORT || 4200;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`🚀 Serveur en ligne sur le port ${PORT}`);
 });

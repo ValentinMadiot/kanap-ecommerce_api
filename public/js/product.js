@@ -7,7 +7,7 @@ console.log("ID du produit sélectionné :", id);
 function getApiUrl() {
   return window.location.hostname === "kanap-vm.vercel.app"
     ? "https://kanap-ecommerce-api.onrender.com"
-    : "http://localhost:4200";
+    : "http://localhost:8080";
 }
 // On récupère les données de l'API via l'ID du produit sélectionné
 fetch(`${getApiUrl()}/api/products/${id}`)

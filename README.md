@@ -17,37 +17,41 @@
 
 ## <br /> <a name="introduction">🎨 Introduction</a>
 
-Ce projet consiste à développer un site e-commerce en JavaScript Vanilla, mettant en avant des fonctionnalités dynamiques et une expérience utilisateur fluide sans dépendre de frameworks externes. Le site intègre une architecture simple et efficace, avec des affichages dynamiques de produits, une gestion du panier via localStorage, et un design responsive en HTML et CSS.
+Ce projet consiste à développer un site **e-commerce** en **JavaScript Vanilla**, mettant en avant des fonctionnalités dynamiques et une expérience utilisateur fluide sans dépendre de frameworks externes.
 
-📂 Pour plus de détails, consultez le [dossier](/.docs/).
+Il comprend une architecture simple avec affichage dynamique de produits, gestion du panier via **localStorage** et design responsive en **HTML** et **CSS**.
+
+> 📂 Pour plus de détails, consultez le [dossier](/.docs/).
 
 ## <br /> <a name="technologies">🛠️ Technologies</a>
 
-- Frontend : HTML, CSS et JavaScript pur pour un affichage dynamique des produits et un design responsive.
-- Backend : Node.js et Express pour la gestion du serveur et la création d'une API REST.
+- **Frontend** : HTML, CSS et JavaScript pur
+- **Backend** : Node.js + Express (API REST)
+- **Stockage local** : localStorage pour le panier
 
 ## <br /> <a name="fonctionnalités">🎯 Fonctionnalités</a>
 
-- Affichage dynamique des produits via des requêtes à l'API.
-- Gestion du panier en temps réel avec localStorage pour une expérience utilisateur fluide.
-- Validation avancée des formulaires grâce aux REGEX, garantissant des entrées sécurisées.
+- Affichage dynamique des produits via des requêtes à l'API
+- Gestion du panier en temps réel avec localStorage
+- Validation avancée des formulaires grâce aux REGEX
 - Interface responsive, optimisée pour tous les écrans.
 
 ## <br /> <a name="upgrade">🚧 Mise à Jour</a>
 
-J'ai apporté des améliorations au projet initial afin de le rendre déployable :
-
-- Refonte de l'architecture pour une meilleure organisation et évolutivité.
-- Déploiement du backend sur Render pour une gestion efficace des ressources.
-- Hébergement du frontend sur Vercel pour des performances optimales.
+- Nouvelle architecture pour une meilleure lisibilité
+- Déploiement du backend sur Render
+- Hébergement frontend sur Vercel
 
 ## <br /> <a name="installation">🚀 Installation</a>
 
-### ✅ Pré-requis
+### ✅ Prérequis
 
-🛠️ [**Git**](https://git-scm.com/) &nbsp;&nbsp;
-🔧 [**Node.js**](https://nodejs.org/fr) &nbsp;&nbsp;
-📦 [**npm**](https://www.npmjs.com/)
+- [Git](https://git-scm.com/) &nbsp;—&nbsp; Système de gestion de versions
+- [Node.js](https://nodejs.org/fr) &nbsp;—&nbsp; Exécuteur local de scripts JavaScript
+- [npm](https://www.npmjs.com/) &nbsp;—&nbsp; Gestionnaire de paquets JavaScript
+- [Google Chrome](https://www.google.com/) &nbsp;—&nbsp; Navigateur moderne
+- [Visual Studio Code](https://code.visualstudio.com/) &nbsp;—&nbsp; Éditeur de code
+- [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) &nbsp;—&nbsp; Extension VS Code
 
 ### 📥 Cloner le projet
 
@@ -55,20 +59,18 @@ J'ai apporté des améliorations au projet initial afin de le rendre déployable
 git clone git@github.com:ValentinMadiot/kanap-ecommerce_api.git
 ```
 
-### 📦 Installer les dépendances /api
+### ▶️ Lancer le projet
+
+### Backend
 
 ```bash
+cd api
 npm install
-```
-
-### ▶️ Lancer le backend en local
-
-```bash
 npm start
 ```
 
-Le serveur sera accessible à l'adresse : http://localhost:4200
+Backend disponible sur : `http://localhost:8080`
 
-### 🖥️ Lancer le projet
+### Frontend
 
-Utilisez Live Server pour un rechargement en temps réel.
+Il suffit d’ouvrir le fichier `index.html` dans un navigateur, ou d’utiliser l’extension **Live Server** sur VS Code pour un aperçu dynamique.
