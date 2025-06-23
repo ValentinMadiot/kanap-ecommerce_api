@@ -56,7 +56,8 @@ Il comprend une architecture simple avec affichage dynamique de produits, gestio
 ### 📥 Cloner le projet
 
 ```bash
-git clone git@github.com:ValentinMadiot/kanap-ecommerce_api.git
+git clone git@github.com:ValentinMadiot/kanap-ecommerce_api
+cd kanap-ecommerce_api
 ```
 
 ### ▶️ Lancer le projet
